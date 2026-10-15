@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notes Hub</title>
+
+<style>
+:root{
+    --bg:#ffffff;
+    --card:#fff5f5;
+    --card2:#ffffff;
+    --text:#171717;
+    --muted:#666666;
+    --red:#dc2626;
+    --red-dark:#991b1b;
+    --red-light:#fee2e2;
+    --border:#fecaca;
+    --header:rgba(255,255,255,.94);
+    --shadow:0 18px 45px rgba(220,38,38,.12);
+}
+
+body.dark{
+    --bg:#080808;
+    --card:#130909;
+    --card2:#171111;
+    --text:#ffffff;
+    --muted:#bdbdbd;
+    --red:#ef4444;
+    --red-dark:#b91c1c;
+    --red-light:#3b1010;
+    --border:#511818;
+    --header:rgba(8,8,8,.94);
+    --shadow:0 20px 55px rgba(239,68,68,.16);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.75;
+    transition:.3s;
+}
+
+button,input{
+    font-family:inherit;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:var(--header);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid var(--border);
+}
+
+.navbar{
+    max-width:1250px;
+    margin:auto;
+    padding:17px 25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.brand{
+    color:var(--red);
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    cursor:pointer;
+}
+
+.nav-links{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.nav-btn,
+.theme-btn{
+    border:0;
+    background:transparent;
+    color:var(--text);
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:800;
+    font-size:12px;
+    transition:.25s;
+}
+
+.nav-btn:hover,
+.theme-btn:hover{
+    background:var(--red-light);
+    color:var(--red);
+}
+
+.theme-btn{
+    border:1px solid var(--border);
+}
+
+.view{
+    display:none;
+    animation:pageIn .45s ease;
+}
+
+.view.active{
+    display:block;
+}
+
+@keyframes pageIn{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* HERO */
+
+.hero{
+    max-width:1250px;
+    min-height:650px;
+    margin:auto;
+    padding:90px 25px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero:before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    right:-180px;
+    top:40px;
+    border-radius:50%;
+    background:var(--red-light);
+    animation:float 7s ease-in-out infinite;
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:230px;
+    height:230px;
+    left:-110px;
+    bottom:30px;
+    border-radius:50%;
+    background:var(--red-light);
+    animation:float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-25px)}
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:1050px;
+}
+
+.hero-small{
+    color:var(--red);
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:4px;
+    margin-bottom:22px;
+}
+
+.hero-line{
+    width:100px;
+    height:5px;
+    background:var(--red);
+    border-radius:20px;
+    margin-bottom:30px;
+}
+
+.hero h1{
+    font-size:clamp(50px,8vw,100px);
+    line-height:.98;
+    letter-spacing:-4px;
+    margin-bottom:30px;
+    font-weight:950;
+}
+
+.hero h1 span{
+    color:var(--red);
+}
+
+.hero-description{
+    max-width:720px;
+    color:var(--muted);
+    font-size:19px;
+    margin-bottom:40px;
+}
+
+.hero-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+}
+
+.primary-btn,
+.secondary-btn{
+    padding:15px 28px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:900;
+    font-size:14px;
+    transition:.3s;
+}
+
+.primary-btn{
+    border:0;
+    background:var(--red);
+    color:white;
+}
+
+.primary-btn:hover{
+    background:var(--red-dark);
+    transform:translateY(-4px);
+    box-shadow:0 15px 30px rgba(220,38,38,.25);
+}
+
+.secondary-btn{
+    background:var(--card2);
+    color:var(--red);
+    border:1px solid var(--border);
+}
+
+.secondary-btn:hover{
+    transform:translateY(-4px);
+    border-color:var(--red);
+}
+
+/* GENERAL */
+
+.section,
+.page-top,
+.notes-layout,
+.qa-container{
+    max-width:1250px;
+    margin:auto;
+}
+
+.section{
+    padding:70px 25px;
+}
+
+.section-heading{
+    margin-bottom:35px;
+}
+
+.section-heading small{
+    color:var(--red);
+    font-weight:900;
+    letter-spacing:3px;
+}
+
+.section-heading h2{
+    font-size:clamp(30px,5vw,50px);
+    line-height:1.1;
+    margin-top:8px;
+}
+
+.choice-grid,
+.unit-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.choice-card,
+.unit-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:35px;
+    cursor:pointer;
+    transition:.35s;
+    position:relative;
+    overflow:hidden;
+}
+
+.choice-card:before,
+.unit-card:before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:4px;
+    background:var(--red);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:.35s;
+}
+
+.choice-card:hover,
+.unit-card:hover{
+    transform:translateY(-8px);
+    box-shadow:var(--shadow);
+}
+
+.choice-card:hover:before,
+.unit-card:hover:before{
+    transform:scaleX(1);
+}
+
+.choice-card h3,
+.unit-card h3{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.choice-card p,
+.unit-card p{
+    color:var(--muted);
+}
+
+.page-top{
+    padding:55px 25px 30px;
+}
+
+.back-btn{
+    border:0;
+    background:transparent;
+    color:var(--red);
+    font-weight:900;
+    cursor:pointer;
+    margin-bottom:25px;
+}
+
+.page-top h1{
+    font-size:clamp(40px,6vw,70px);
+    line-height:1.05;
+    margin-bottom:15px;
+}
+
+.page-top p{
+    color:var(--muted);
+}
+
+/* NOTES */
+
+.notes-layout{
+    padding:20px 25px 80px;
+    display:grid;
+    grid-template-columns:270px 1fr;
+    gap:30px;
+}
+
+.notes-sidebar{
+    position:sticky;
+    top:100px;
+    align-self:start;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px;
+    max-height:calc(100vh - 125px);
+    overflow-y:auto;
+}
+
+.notes-sidebar h3{
+    color:var(--red);
+    margin-bottom:15px;
+}
+
+.search-box{
+    width:100%;
+    padding:13px 15px;
+    border-radius:9px;
+    border:1px solid var(--border);
+    background:var(--card2);
+    color:var(--text);
+    outline:0;
+    margin-bottom:20px;
+}
+
+.search-box:focus{
+    border-color:var(--red);
+    box-shadow:0 0 0 3px var(--red-light);
+}
+
+.topic-link{
+    display:block;
+    width:100%;
+    text-align:left;
+    border:0;
+    background:transparent;
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.topic-link:hover{
+    background:var(--red-light);
+    color:var(--red);
+}
+
+.note-section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:30px;
+    margin-bottom:25px;
+    transition:.3s;
+}
+
+.note-section:hover{
+    box-shadow:var(--shadow);
+}
+
+.note-section h2{
+    color:var(--red);
+    font-size:27px;
+    margin-bottom:18px;
+}
+
+.note-section h3{
+    font-size:21px;
+    margin:25px 0 10px;
+}
+
+.note-section p{
+    margin-bottom:12px;
+}
+
+.note-section ul,
+.note-section ol{
+    margin:10px 0 15px 27px;
+}
+
+.note-section li{
+    margin-bottom:7px;
+}
+
+.note-example{
+    background:var(--red-light);
+    border-left:4px solid var(--red);
+    padding:16px 20px;
+    border-radius:8px;
+    margin:18px 0;
+}
+
+.remember-box{
+    background:var(--red);
+    color:white;
+    border-radius:18px;
+    padding:30px;
+    margin-top:30px;
+}
+
+.remember-box h2{
+    color:white;
+}
+
+.remember-box ul{
+    margin-left:22px;
+}
+
+.flow{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    margin:15px 0;
+}
+
+.flow span{
+    background:var(--red);
+    color:white;
+    padding:6px 13px;
+    border-radius:20px;
+    font-weight:800;
+}
+
+.flow b{
+    color:var(--red);
+}
+
+/* Q&A */
+
+/* UI vs UX Comparison Table */
+
+.comparison-table{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    margin-top:20px;
+    background:var(--card2);
+}
+
+.table-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    border-bottom:1px solid var(--border);
+}
+
+.table-row > div{
+    padding:18px 20px;
+}
+
+.table-row > div:first-child{
+    border-right:1px solid var(--border);
+}
+
+.table-header{
+    background:var(--red);
+    color:white;
+    font-weight:900;
+    font-size:20px;
+    text-align:center;
+}
+
+.table-header > div:first-child{
+    border-right:1px solid rgba(255,255,255,.4);
+}
+
+.highlight-row{
+    background:var(--red-light);
+    color:var(--red);
+    font-weight:900;
+    text-align:center;
+}
+
+.balance-row{
+    padding:20px;
+    text-align:center;
+    background:var(--red);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.balance-row span{
+    font-weight:normal;
+}
+
+@media(max-width:600px){
+
+    .table-row > div{
+        padding:14px 12px;
+        font-size:14px;
+    }
+
+    .table-header{
+        font-size:17px;
+    }
+
+    .balance-row{
+        flex-direction:column;
+        gap:5px;
+    }
+
+}
+
+.qa-container{
+    padding:20px 25px 80px;
+}
+
+.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:15px 0 30px;
+}
+
+.tab{
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    padding:10px 17px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:800;
+}
+
+.tab.active,
+.tab:hover{
+    background:var(--red);
+    color:white;
+    border-color:var(--red);
+}
+
+.question-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    margin-bottom:20px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.question-card:hover{
+    box-shadow:var(--shadow);
+}
+
+.question-header{
+    padding:24px;
+}
+
+.mark-badge{
+    display:inline-block;
+    background:var(--red);
+    color:white;
+    padding:5px 10px;
+    border-radius:5px;
+    font-size:11px;
+    font-weight:900;
+    margin-bottom:12px;
+}
+
+.question-header h3{
+    font-size:19px;
+    line-height:1.5;
+}
+
+.question-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    padding:0 24px 24px;
+}
+
+.answer-btn,
+.copy-btn{
+    border:1px solid var(--border);
+    background:var(--card2);
+    color:var(--red);
+    padding:9px 15px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:800;
+}
+
+.answer-btn:hover,
+.copy-btn:hover{
+    background:var(--red);
+    color:white;
+}
+
+.answer{
+    display:none;
+    padding:25px;
+    border-top:1px solid var(--border);
+    background:var(--card2);
+    animation:answerIn .35s ease;
+}
+
+.answer.show{
+    display:block;
+}
+
+@keyframes answerIn{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.answer p{
+    margin-bottom:12px;
+}
+
+.answer ul,
+.answer ol{
+    margin:10px 0 15px 25px;
+}
+
+.answer h4{
+    color:var(--red);
+    font-size:18px;
+    margin:20px 0 8px;
+}
+
+footer{
+    border-top:1px solid var(--border);
+    padding:35px 20px;
+    text-align:center;
+    color:var(--muted);
+}
+
+footer strong{
+    color:var(--red);
+}
+
+@media(max-width:850px){
+
+    .navbar{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .nav-links{
+        width:100%;
+    }
+
+    .choice-grid,
+    .unit-grid{
+        grid-template-columns:1fr;
+    }
+
+    .notes-layout{
+        grid-template-columns:1fr;
+    }
+
+    .notes-sidebar{
+        position:static;
+        max-height:none;
+    }
+}
+
+@media(max-width:600px){
+
+    .navbar{
+        padding:15px;
+    }
+
+    .hero,
+    .section,
+    .page-top,
+    .notes-layout,
+    .qa-container{
+        padding-left:18px;
+        padding-right:18px;
+    }
+
+    .hero h1{
+        font-size:48px;
+        letter-spacing:-2px;
+    }
+
+    .hero-description{
+        font-size:17px;
+    }
+
+    .note-section,
+    .choice-card,
+    .unit-card{
+        padding:22px;
+    }
+
+    .note-section h2{
+        font-size:23px;
+    }
+
+    .note-section h3{
+        font-size:19px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<nav class="navbar">
+
+<div class="brand" onclick="showHome()">
+NOTES HUB
+</div>
+
+<div class="nav-links">
+<button class="nav-btn" onclick="showHome()">HOME</button>
+<button class="nav-btn" onclick="showNotesUnits()">NOTES</button>
+<button class="nav-btn" onclick="showQAUnits()">Q&A</button>
+<button class="theme-btn" onclick="toggleTheme()" id="themeButton">DARK</button>
+</div>
+
+</nav>
+</header>
+
+
+<main>
+
+<!-- HOME -->
+
+<section id="homeView" class="view active">
+
+<div class="hero">
+
+<div class="hero-content">
+
+<div class="hero-small">
+STUDY • UNDERSTAND • REVISE
+</div>
+
+<div class="hero-line"></div>
+
+<h1>
+Fundamentals of<br>
+<span>Design for Developers</span>
+</h1>
+
+<p class="hero-description">
+A complete study space for Fundamentals of Design for Developers
+notes and question answers.
+</p>
+
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-heading">
+<small>START LEARNING</small>
+<h2>Choose your study mode</h2>
+</div>
+
+<div class="choice-grid">
+
+<div class="choice-card" onclick="showNotesUnits()">
+
+<h3>View Notes</h3>
+
+<p>
+Read the complete notes for clear understanding.
+</p>
+
+</div>
+
+
+<div class="choice-card" onclick="showQAUnits()">
+
+<h3>View Q&A</h3>
+
+<p>
+Practice 2-mark, 5-mark and 10-mark questions with answers.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NOTES UNITS -->
+
+<section id="notesUnitsView" class="view">
+
+<div class="page-top">
+
+<button class="back-btn" onclick="showHome()">
+← BACK TO HOME
+</button>
+
+<h1>Notes</h1>
+
+<p>
+Select a unit to read the complete notes.
+</p>
+
+</div>
+
+<div class="section">
+
+<div class="unit-grid">
+
+<div class="unit-card" onclick="openNotes(1)">
+
+<h3>UNIT 1</h3>
+
+<p>
+Introduction to UI & UX
+</p>
+
+</div>
+
+
+<div class="unit-card" onclick="openNotes(2)">
+
+<h3>UNIT 2</h3>
+
+<p>
+Design Principles
+</p>
+
+</div>
+
+<div class="unit-card" onclick="openNotes(3)">
+<h3>UNIT 3</h3>
+<p>UI/UX Design Tools &amp; Wireframing</p>
+</div>
+
+<div class="unit-card" onclick="openNotes(4)">
+<h3>UNIT 4</h3>
+<p>Design Tools, Prototyping &amp; Design Handoff</p>
+</div>
+
+<div class="unit-card" onclick="openNotes(5)">
+<h3>UNIT 5</h3>
+<p>UI/UX Usability Testing &amp; Metrics</p>
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NOTES PAGE -->
+
+<section id="notesUnitView" class="view">
+
+<div class="page-top">
+
+<button class="back-btn" onclick="showNotesUnits()">
+← BACK TO UNITS
+</button>
+
+<h1 id="notesTitle"></h1>
+
+<p id="notesSubtitle"></p>
+
+</div>
+
+<div class="notes-layout">
+
+<aside class="notes-sidebar">
+
+<h3>Topics</h3>
+
+<input
+type="text"
+id="notesSearch"
+class="search-box"
+placeholder="Search topics..."
+oninput="filterNotes()"
+>
+
+<div id="topicLinks"></div>
+
+</aside>
+
+<div class="notes-content" id="notesContent"></div>
+
+</div>
+
+</section>
+
+
+<!-- Q&A UNITS -->
+
+<section id="qaUnitsView" class="view">
+
+<div class="page-top">
+
+<button class="back-btn" onclick="showHome()">
+← BACK TO HOME
+</button>
+
+<h1>Question & Answer</h1>
+
+<p>
+Select a unit and practice questions according to marks.
+</p>
+
+</div>
+
+<div class="section">
+
+<div class="unit-grid">
+
+<div class="unit-card" onclick="openQA(1)">
+
+<h3>UNIT 1</h3>
+
+<p>
+Introduction to UI & UX
+</p>
+
+</div>
+
+
+<div class="unit-card" onclick="openQA(2)">
+
+<h3>UNIT 2</h3>
+
+<p>
+Design Principles
+</p>
+
+</div>
+
+<div class="unit-card" onclick="openQA(3)">
+<h3>UNIT 3</h3>
+<p>UI/UX Design Tools &amp; Wireframing</p>
+</div>
+
+<div class="unit-card" onclick="openQA(4)">
+<h3>UNIT 4</h3>
+<p>Design Tools, Prototyping &amp; Design Handoff</p>
+</div>
+
+<div class="unit-card" onclick="openQA(5)">
+<h3>UNIT 5</h3>
+<p>UI/UX Usability Testing &amp; Metrics</p>
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- Q&A PAGE -->
+
+<section id="qaUnitView" class="view">
+
+<div class="page-top">
+
+<button class="back-btn" onclick="showQAUnits()">
+← BACK TO UNITS
+</button>
+
+<h1 id="qaTitle"></h1>
+
+<p id="qaSubtitle"></p>
+
+</div>
+
+<div class="qa-container">
+
+<input
+type="text"
+id="qaSearch"
+class="search-box"
+placeholder="Search questions..."
+oninput="renderQuestions()"
+>
+
+<div class="tabs">
+
+<button class="tab active" onclick="setTab('all',this)">
+ALL
+</button>
+
+<button class="tab" onclick="setTab('2',this)">
+2-MARK
+</button>
+
+<button class="tab" onclick="setTab('5',this)">
+5-MARK
+</button>
+
+<button class="tab" onclick="setTab('10',this)">
+10-MARK
+</button>
+
+</div>
+
+<div id="questionsContainer"></div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+<p>
+<strong>By Madhumathi</strong>
+| B.Sc. Data Science and Artificial Intelligence
+</p>
+
+</footer>
+
+
+<script>
+
+/* ================= THEME ================= */
+
+const savedTheme=localStorage.getItem("designNotesTheme");
+
+if(savedTheme==="dark"){
+    document.body.classList.add("dark");
+}
+
+updateThemeButton();
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    const dark=document.body.classList.contains("dark");
+
+    localStorage.setItem(
+        "designNotesTheme",
+        dark ? "dark" : "light"
+    );
+
+    updateThemeButton();
+}
+
+function updateThemeButton(){
+
+    document.getElementById("themeButton").textContent =
+        document.body.classList.contains("dark")
+        ? "☀️ LIGHT"
+        : "🌙 DARK";
+}
+
+
+/* ================= VIEWS ================= */
+
+const views=[
+"homeView",
+"notesUnitsView",
+"notesUnitView",
+"qaUnitsView",
+"qaUnitView"
+];
+
+function hideAll(){
+
+    views.forEach(id=>{
+        document.getElementById(id).classList.remove("active");
+    });
+
+    window.scrollTo(0,0);
+}
+
+function showHome(){
+
+    hideAll();
+
+    document.getElementById("homeView").classList.add("active");
+}
+
+function showNotesUnits(){
+
+    hideAll();
+
+    document.getElementById("notesUnitsView").classList.add("active");
+}
+
+function showQAUnits(){
+
+    hideAll();
+
+    document.getElementById("qaUnitsView").classList.add("active");
+}
+
+
+/* ==========================================================
+   YOUR COMPLETE NOTES
+   IMPORTANT:
+   THE WORDING BELOW IS KEPT AS YOU PROVIDED IT.
+   ========================================================== */
+
+const notes={
+
+1:{
+
+title:"UNIT 1. Introduction to UI & UX",
+
+subtitle:"Complete Unit 1 Notes",
+
+topics:[
+"User Interface",
+"User Experience",
+"User Interface vs User Experience",
+"Examples",
+"In Simple words",
+"How UI & UX Work together",
+"Importance of Design in SDLC",
+"Design Thinking",
+"Basics of User - Centered Design",
+"Points to Remember"
+],
+
+content:`
+
+<div class="note-section">
+
+<h2>User Interface :</h2>
+
+<p>· UI is the medium that enables interaction between a user and a computer system, by providing visual interactive elements.</p>
+
+<p>· UI is the visual side of digital product. It includes the buttons , colors , fonts , icons and layouts that you see on the screen.</p>
+
+<p>Focuses on how product looks and feels .</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>User Experience :</h2>
+
+<p>· UX is the process of designing products that provides meaningful and useful and satisfying experience to users throughout their interaction with the product.</p>
+
+<p>· The feeling side of design. How easy enjoyable and smooth it FEELS to use an app or website.</p>
+
+<p>Complete user journey.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>User Interface vs User Experience.</h2>
+
+<p><strong>User Interface</strong></p>
+
+<p>UI is how it look. It includes the buttons, colours and layouts.</p>
+
+<p><strong>User Experience</strong></p>
+
+<p>UX is how it works, the journey, ease and feeling.</p>
+
+<p>Both shape every app, website and product you use.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Examples:</h2>
+
+<p>Think of music app with beautiful buttons, colours and animations - that is good UI</p>
+
+<p>But you can't find play button - Bad UX.</p>
+
+<p>Think of a simple - looking app with plain buttons and no fancy effects. But you can Use it easily and find buttons - Good UX</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>In Simple words</h2>
+
+<div class="comparison-table">
+
+    <div class="table-row table-header">
+        <div>UI</div>
+        <div>UX</div>
+    </div>
+
+    <div class="table-row">
+        <div>
+            <strong>Visual appearance and Interaction.</strong>
+        </div>
+
+        <div>
+            <strong>Overall journey and satisfaction.</strong>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div>
+            <strong>Aspect</strong><br>
+            Visual appearance
+        </div>
+
+        <div>
+            <strong>Aspect</strong><br>
+            Overall experience
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div>
+            <strong>Elements</strong><br>
+            Colors, typography, icons, layouts
+        </div>
+
+        <div>
+            <strong>Elements</strong><br>
+            User needs, flows, usability
+        </div>
+    </div>
+
+
+    <div class="balance-row">
+        <strong>Good UI doesn't mean Good UX</strong>
+        <span>(Both must balance)</span>
+    </div>
+
+</div>
+
+<div class="note-example">
+
+<strong>For example:</strong><br><br>
+
+Food delivery app - Easy restaurent search (UX) + Clear filters/ buttons (UI)
+
+</div>
+
+</div>
+
+<div class="note-section">
+
+<h2>How UI & UX Work together</h2>
+
+<p>· UX defines what users need and how user's journeys should flow</p>
+
+<p>· UI translate UX into visible, interactive interface.</p>
+
+<p>· Balance: Usefulness + Usability + Accessibility + Clarity.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Importance of Design in SDLC</h2>
+
+<p>· Requirements: understand users, business goals and problems before implementation.</p>
+
+<p>· Planning: Define users flows, content structure and interaction requirements.</p>
+
+<p>· Design : Create wireframes , prototypes and visual interfaces.</p>
+
+<p>· Development: Designers and developers collaborate to implement the intended experience.</p>
+
+<p>· Testing: Evaluate, usability and identify problems before and afer release .</p>
+
+<p>· Maintenance: Use feedback and usage information to improve.</p>
+
+<h3>· Benifits :</h3>
+
+<ul>
+
+<li>Reduced rework</li>
+
+<li>Fewer bugs</li>
+
+<li>Higher satisfaction</li>
+
+<li>Lower costs</li>
+
+</ul>
+
+<h3>Well designed!</h3>
+
+<p>· Strong UX - higher relevitation</p>
+
+<p>· Clean workflow - fewer support tickets.</p>
+
+<p>· Consistent design systems → Faster development</p>
+
+<h3>Poorly designed</h3>
+
+<p>· Weak UX - friction, confusion, abandment.</p>
+
+<p>· More fixer + higher maintenance costs.</p>
+
+<p>· User chwin increases.</p>
+
+<h3>Examples:</h3>
+
+<p>· Well designed - Apple's design</p>
+
+<p>· Poorly designed - Health care . gov (2013)</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Design Thinking</h2>
+
+<p>· A human centered problem solving approach used to understand users and develop solutions.</p>
+
+<h3>· Stages of Design Thinking</h3>
+
+<ul>
+
+<li>Empathize - Understand users, their context, needs.</li>
+
+<li>Define - Clearly frame the problem based on what was learned.</li>
+
+<li>Ideate - generale multiple possible solutions without immediately selecting one.</li>
+
+<li>Prototype - Create a simple representation of a solution .</li>
+
+<li>Test - Evaluate the prototype with users, learn from feedback and improve it.</li>
+
+</ul>
+
+<p>· The process is iterative: teams may return to earlier stages when new insights appear.</p>
+
+<h3>Examples :</h3>
+
+<p>· College Event App:</p>
+
+<ul>
+
+<li>Empathize: interview students about event registration issues</li>
+
+<li>Define: Students needs a faster way to discover and register for events.</li>
+
+<li>Ideale: List possible search, filter and registration screen solution</li>
+
+<li>Prototype: Create a simple event- list and registration screen.</li>
+
+<li>Test : Ask students to perform tasks, observe hesitations, collect feedback, improve design.</li>
+
+</ul>
+
+<p>· Hospital checkin Redesign :</p>
+
+<ul>
+
+<li>Empathize: Interview patients and staff to understand pain points.</li>
+
+<li>Define: Identify core problems in check-in progress.</li>
+
+<li>Ideale: Brainstorm smoother, welcoming solutions.</li>
+
+<li>Prototype: Digital kiosk and simplified signage.</li>
+
+<li>Test: Refine design with real users to reduce stress and save time.</li>
+
+</ul>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Basics of User - Centered Design</h2>
+
+<p>· USD keeps users, their goals and their context at the center of the designed process.</p>
+
+<h3>· Steps in UCD :</h3>
+
+<ul>
+
+<li>Understand : Identify target users, tasks , environments and needs.</li>
+
+<li>Design: Create solutions based on evidence about users</li>
+
+<li>Evaluate: Test design with representative users.</li>
+
+<li>Iterate: Improve the product using feedback and findings</li>
+
+</ul>
+
+<h3>· Key - Principles:</h3>
+
+<ul>
+
+<li>Usefulness</li>
+
+<li>Usability</li>
+
+<li>Accessibility</li>
+
+<li>Consistency</li>
+
+<li>Clarity</li>
+
+<li>Feedback</li>
+
+</ul>
+
+<p>· Example: A student portal should be designed around real student tastes such as checking attendence, timetable and results.</p>
+
+<h3>· Benefits of UCD:</h3>
+
+<ul>
+
+<li>Higher user satisfaction</li>
+
+<li>Increased product adoption</li>
+
+<li>Reduced development costs.</li>
+
+</ul>
+
+</div>
+
+
+<div class="remember-box">
+
+<h2>Points to Remember (Unit 1)</h2>
+
+<ul>
+
+<li>UI is mainly concerned with the interface and interaction layers.</li>
+
+<li>UX covers the broader experience and user journey.</li>
+
+<li>UI and UX are different but closely connected.</li>
+
+<li>Design should be considered throughout the software development lifecycle.</li>
+
+<li>Design thinking should be user Em uses Empathize - Define - Ideale Prototype Test.</li>
+
+<li>User- centered design continuously considers user needs and feedback.</li>
+
+</ul>
+
+</div>
+
+`
+
+},
+
+
+2:{
+
+title:"UNIT 2. Design Principles",
+
+subtitle:"Complete Unit 2 Notes",
+
+topics:[
+"Layout in UI Design",
+"Grid Systems",
+"Balanced Design",
+"Responsive Design",
+"Typography",
+"Color Theory in UI Design",
+"Visual Hierarchy",
+"Components of a Good UI",
+"Buttons",
+"Icons",
+"Menus",
+"Forms",
+"Mobile - First Design",
+"Responsive Interface",
+"Design Example - Responsive Student Portal",
+"Points to Remember"
+],
+
+content:`
+
+<div class="note-section">
+
+<h2>Layout in UI Design :</h2>
+
+<p>· Layout is the arrangement and organization of visual elements on a screen.</p>
+
+<p>· Good layout helps users scan content, understand relationships, and complete tasks efficiently</p>
+
+<h3>· Important Rules:</h3>
+
+<ul>
+
+<li>Alignment - keep items lined up neatly.</li>
+
+<li>Spacing - Leave enough gaps , so the screen doesn't look messy or clumsy.</li>
+
+<li>Grouping - put related things together.</li>
+
+<li>Balance - Don't put everything on one side, spread it evenly.</li>
+
+<li>Consistency - Use the same style everywhere.</li>
+
+<li>Proximity - Keep related items close to eachother.</li>
+
+</ul>
+
+<p>· Example: A dashboard groups navigation on the left, summary cards in the middle and actions on the right</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Grid Systems :</h2>
+
+<p>· A grid is like an invisible table of rows and columns that helps place items neatly.</p>
+
+<p>· It makes the design organized and consistent.</p>
+
+<h3>· Parts of Grid:</h3>
+
+<ul>
+
+<li>Columns - Vertical Sections</li>
+
+<li>Gutters - Space between columns</li>
+
+<li>Margins - Space at the edge</li>
+
+<li>Containers - Boxes that hold content</li>
+
+</ul>
+
+<p>· Grids help designs adjust to different screen sizes (desktop, tablet, mobile).</p>
+
+<p>· Example: A 12- column grid → 8 columns for main content, 4 columns for sidebars.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Balanced Design :</h2>
+
+<p>· Spread things evenly so one side doesn't look heavy.</p>
+
+<p>· Use empty space (whitespace) to make the screen clean.</p>
+
+<p>· Group related items together.</p>
+
+<p>· Highlight important content more than less important content.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Responsive Design :</h2>
+
+<p>· The design changes shape to fit different devices (phone, tablet, computer).</p>
+
+<p>· Text stays readable.</p>
+
+<p>· Button stays big enough to tap on phone.</p>
+
+<p>· No need to scroll sideways.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Typography :</h2>
+
+<p>· Typography is about how text looks.</p>
+
+<p>· Choose fonts that match the product and audience.</p>
+
+<p>· Make a clear order :</p>
+
+<ul>
+
+<li>Big bold text for headings.</li>
+
+<li>Medium text for subheadings.</li>
+
+<li>Normal text for body content.</li>
+
+</ul>
+
+<p>· Keep line length easy to read (not too long).</p>
+
+<p>· Use strong contrast (dark text on light background).</p>
+
+<p>· Don't use too many different font sizes.</p>
+
+<p>· Good typography makes reading easy and pleasant.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Color Theory in UI Design:</h2>
+
+<p>· Colors send messages and feelings.</p>
+
+<p>· Use a set of primary, secondary and accent colours consistently.</p>
+
+<p>· Warm colors (red, orange) feel energetic.</p>
+
+<p>· Cool colors (blue, green) feel calm.</p>
+
+<p>· Use contrast so text stands out from background.</p>
+
+<p>· Example: Green for Success, Red for Error, Yellow for warning.</p>
+
+<p>· Don't rely only on colors - add text or icons too.</p>
+
+<p>· Always check that colors are easy to read for everyone, including people with vision problems.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Visual Hierarchy:</h2>
+
+<p>· Visual Hierarchy means what people notice first.</p>
+
+<h3>· Ways to control attention :</h3>
+
+<ul>
+
+<li>Size - Bigger items catch the eye.</li>
+
+<li>Position - Top or center items are noticed first.</li>
+
+<li>Contrast - Strong differences highlight important things.</li>
+
+<li>Spacing - Empty spaces makes items stand out.</li>
+
+<li>Bold text shows importance.</li>
+
+</ul>
+
+<p>· Example: On a payment screen, the amount and Pay button should be the most visible.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Components of a Good UI :</h2>
+
+<p>· Common parts of UI:</p>
+
+<ul>
+
+<li>Buttons - Do actions (Save, Submit).</li>
+
+<li>Icons - Small pictures that show meaning (trash can = delete).</li>
+
+<li>Menus - List of options for navigation.</li>
+
+<li>Forms - Boxes to enter information.</li>
+
+</ul>
+
+<h3>· Good practices:</h3>
+
+<ul>
+
+<li>Labels should be clear.</li>
+
+<li>Keep size and spacing consistent.</li>
+
+<li>Show feedback (like a button changing color when clicked).</li>
+
+<li>Show error messages clearly.</li>
+
+<li>Make controls easy for everyone to use.</li>
+
+</ul>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Buttons:</h2>
+
+<ul>
+
+<li>Use action words (Save, Continue).</li>
+
+<li>Make them big enough to click/tap.</li>
+
+<li>Show different states (hover, pressed, disabled).</li>
+
+<li>Highlight the main button more than secondary one.</li>
+
+<li>Place buttons where users expect them.</li>
+
+</ul>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Icons :</h2>
+
+<p>· Use familiar symbols (magnifying glass = search).</p>
+
+<p>· Add text labels if the icon is unclear.</p>
+
+<p>· Keep style consistent.</p>
+
+<p>· Make sure screen readers can describe them.</p>
+
+<p>· Don’t use icons alone if meaning is confusing.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Menus :</h2>
+
+<p>· Organize options logically.</p>
+
+<p>· Use short, clean labels.</p>
+
+<p>· Group related items.</p>
+
+<p>· Keep navigation consistent.</p>
+
+<p>· Show which option is selected.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Forms :</h2>
+
+<p>· Ask only for necessary information.</p>
+
+<p>· Use clean labels and correct input types (date picker for dates).</p>
+
+<p>· Give instructions if needed.</p>
+
+<p>· Show errors clearly and explain how to fix them.</p>
+
+<p>· Keep entered data safe even after an error.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Mobile - First Design</h2>
+
+<p>· Start designing for small screens first.</p>
+
+<p>· Show only the most important content and actions.</p>
+
+<p>· Use simple navigation.</p>
+
+<p>· Make buttons big enough for fingers.</p>
+
+<p>· Use layouts that can grow for bigger screens.</p>
+
+<p>· Optimize images so they load fast on mobile.</p>
+
+<p>· Add more features for tablets and desktops later.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Responsive Interface :</h2>
+
+<p>· Use flexible grids and spacing, not fixed widths.</p>
+
+<p>· Add breakpoints (rules for when layout changes).</p>
+
+<p>· Let content decide how layout adapts, not just device type.</p>
+
+<p>· Keep navigation usable at all sizes.</p>
+
+<p>· Test text, images, forms and buttons on different devices.</p>
+
+<p>· Check portrait and landscape modes.</p>
+
+<p>· Always test with real devices.</p>
+
+</div>
+
+
+<div class="note-section">
+
+<h2>Design Example - Responsive Student Portal</h2>
+
+<p>· Desktop: Dashboard with multiple columns, navigation, summary cards, detailed panels.</p>
+
+<p>· Tablet: Fewer columns, adjusted spacing.</p>
+
+<p>· Mobile: Stacked vertical content, simplified navigation.</p>
+
+<p>· Keep visual hierarchy consistent across all devices.</p>
+
+<p>· Make main actions (like login, view timetable) easy to tap.</p>
+
+<p>· Ensure text and forms are readable everywhere.</p>
+
+<p>· Test common tasks like login, checking attendance, downloading results.</p>
+
+</div>
+
+
+<div class="remember-box">
+
+<h2>Points to Remember (Unit 2)</h2>
+
+<ul>
+
+<li>Layout and grids keep content organised.</li>
+
+<li>Balanced design uses spacing and grouping well.</li>
+
+<li>Typography makes text readable and clear.</li>
+
+<li>Colors add meaning. Visual hierarchy guides attention.</li>
+
+<li>Buttons, icons, menus and forms must be clear and usable.</li>
+
+<li>Mobile-first and responsive design ensures usability across devices.</li>
+
+</ul>
+
+</div>
+
+`
+
+},
+
+3:{
+title:"UNIT 3. UI/UX Design Tools & Wireframing",
+subtitle:"Complete Unit 3 Notes",
+topics:["Introduction to UI/UX Design Tools","Vector-Based Digital Design Tools","Wireframing","Fidelity Spectrum: Low-Fi, Mid-Fi and High-Fi","Creating High-Fidelity Mockups","Interactive Prototyping & Screen Linking","Design Handoff for Developers","Quick Revision"],
+content:`
+<div class="note-section"><h2>1. Introduction to UI/UX Design Tools</h2><p>UI/UX design tools are software applications used to plan, design, prototype, test, present and communicate digital interfaces such as websites, mobile applications and dashboards.</p><h3>Why are design tools important?</h3><ul><li><b>Design:</b> Create layouts, typography, colours, icons, buttons and other interface elements.</li><li><b>Wireframing:</b> Plan the structure and placement of content before detailed visual design.</li><li><b>Mockups:</b> Present the static visual appearance of a proposed interface.</li><li><b>Prototyping:</b> Connect screens and simulate user interactions.</li><li><b>Collaboration:</b> Share designs and collect comments.</li><li><b>Developer handoff:</b> Provide dimensions, styles, assets and interaction specifications.</li></ul></div>
+<div class="note-section"><h2>2. Vector-Based Digital Design Tools</h2><p>Many digital design tools use vector graphics. Vector graphics describe shapes using mathematical paths, points and coordinates instead of storing every pixel individually.</p><ul><li>Vector graphics can be resized to different dimensions without becoming pixelated.</li><li>They are useful for icons, logos, illustrations and scalable interface elements.</li><li>Raster images such as JPEG and PNG are made from pixels and may lose sharpness when enlarged too much.</li></ul><p><b>Example:</b> A vector search icon can be scaled for a phone, tablet or desktop interface while remaining sharp.</p></div>
+<div class="note-section"><h2>3. Wireframing</h2><p>A wireframe is a simplified structural plan of a screen. It shows where content, navigation, buttons, images and other elements will be placed, without focusing on final colours or decorative details.</p><h3>Common wireframe elements</h3><ul><li>Boxes for images and content areas.</li><li>Lines or placeholders for headings and paragraphs.</li><li>Simple shapes for buttons, menus and cards.</li><li>Labels that describe the purpose of each region.</li></ul><h3>Benefits</h3><ul><li>Helps plan information hierarchy and page layout.</li><li>Allows rapid brainstorming and inexpensive changes.</li><li>Helps teams discuss structure before visual styling begins.</li><li>Reveals missing content or navigation early.</li></ul><p><b>Example:</b> A shopping app wireframe may show a search bar at the top, product cards in the middle and a bottom navigation bar.</p></div>
+<div class="note-section"><h2>4. Fidelity Spectrum: Low-Fi, Mid-Fi and High-Fi</h2><p>Fidelity describes how closely a design representation resembles the intended final product in visual detail and interaction.</p><table><tr><th>Level</th><th>Visual details</th><th>Interactivity</th><th>Purpose</th></tr><tr><td>Low-fidelity</td><td>Paper sketches, grayscale boxes, placeholder content</td><td>Usually static</td><td>Rapid brainstorming and early layout exploration</td></tr><tr><td>Mid-fidelity</td><td>Digital grayscale, clearer spacing and vector shapes</td><td>Basic screen linking may be included</td><td>Validate layout and navigation</td></tr><tr><td>High-fidelity</td><td>Brand colours, realistic content, final typography and imagery</td><td>Can include realistic interactions and transitions</td><td>Stakeholder review and usability testing</td></tr></table><p><b>Remember:</b> Low-fi focuses on structure; mid-fi clarifies layout; high-fi communicates realistic appearance and behaviour.</p></div>
+<div class="note-section"><h2>5. Creating High-Fidelity Mockups</h2><p>A high-fidelity mockup is a detailed visual representation of the proposed interface. It applies the design rules of the product's brand and presents the screen close to its intended final appearance.</p><h3>Spatial systems: the 8-point grid</h3><p>An 8-point spacing system uses multiples of 8 for common spacing values, such as 8px, 16px, 24px and 32px. A consistent spacing scale helps maintain rhythm and alignment across screens.</p><h3>Auto Layout and flexible layouts</h3><p>Auto Layout arranges elements and adjusts spacing and dimensions as content changes. Similar principles are used in CSS Flexbox and responsive layouts.</p><p><b>Example:</b> If a button label changes from “OK” to “Confirm Purchase”, the button should expand while preserving balanced padding.</p><h3>Other mockup essentials</h3><ul><li>Consistent typography and colour palette.</li><li>Clear alignment and visual hierarchy.</li><li>Appropriate icons and image assets.</li><li>Reusable components for repeated elements.</li><li>Responsive considerations for different screen sizes.</li></ul></div>
+<div class="note-section"><h2>6. Interactive Prototyping & Screen Linking</h2><p>Interactive prototyping connects static screens to simulate how a product behaves. Designers create connections between elements and destination screens, then define triggers and actions.</p><table><tr><th>Term</th><th>Meaning</th></tr><tr><td>Trigger</td><td>The event that starts an interaction, such as click, tap or hover.</td></tr><tr><td>Action</td><td>The response, such as navigating to a screen or opening an overlay.</td></tr><tr><td>Destination</td><td>The screen or state displayed after the action.</td></tr><tr><td>Transition</td><td>The visual movement between screens or states.</td></tr><tr><td>Overlay</td><td>A temporary layer shown above the current screen, such as a dialog.</td></tr></table><h3>Basic screen-linking steps</h3><ol><li>Identify the user flow and required screens.</li><li>Select an interactive element, such as a Login button.</li><li>Connect it to the destination screen.</li><li>Choose a trigger such as On Click or On Tap.</li><li>Choose the action and transition.</li><li>Preview the prototype and test every connection.</li></ol><p><b>Example flow:</b> Login → Home → Product Details → Cart → Checkout.</p></div>
+<div class="note-section"><h2>7. Design Handoff for Developers</h2><p>Design handoff is the process of transferring approved designs, assets and specifications from designers to developers so that the implemented product matches the intended interface.</p><table><tr><th>Stage</th><th>Visual format</th><th>Objective</th><th>Examples</th></tr><tr><td>Wireframing</td><td>Basic boxes and lines</td><td>Plan structure and hierarchy</td><td>Paper, Balsamiq, Figma</td></tr><tr><td>High-fidelity UI</td><td>Polished visual design</td><td>Apply brand, colours and typography</td><td>Figma, Sketch, Adobe XD</td></tr><tr><td>Prototyping</td><td>Clickable screens and transitions</td><td>Test user flows</td><td>Figma prototype tools, Proto.io</td></tr><tr><td>Handoff</td><td>Specifications and assets</td><td>Support implementation</td><td>Figma Dev Mode, Zeplin, design tokens</td></tr></table><h3>Information developers need</h3><ul><li>Approved screens and component states.</li><li>Dimensions, margins, padding and spacing.</li><li>Font family, size, weight and line height.</li><li>Colour values and design tokens.</li><li>Icons, images, logos and export formats.</li><li>Navigation, interaction and responsive rules.</li></ul></div>
+<div class="remember-box"><h2>8. Quick Revision</h2><ul><li>Wireframe = structure; mockup = appearance; prototype = simulated behaviour.</li><li>Low-fi is quick and simple; high-fi is detailed and realistic.</li><li>Vector graphics scale without pixelation.</li><li>Prototype flow: trigger → action → destination/transition.</li><li>Handoff provides specifications, assets and behaviour details to developers.</li></ul></div>
+`
+},
+
+4:{
+title:"UNIT 4. Design Tools, Prototyping & Design Handoff",
+subtitle:"Complete Unit 4 Notes",
+topics:["Introduction to UI Design Tools","Figma","Adobe XD","Sketch","Tool Comparison","Wireframe, Mockup and Prototype","High-Fidelity Prototypes","Interactive Prototyping","Linking Screens","Design Handoff","Design Systems","Assets and File Organization","Accessibility and Common Problems","Exam Revision"],
+content:`
+<div class="note-section"><h2>1. Introduction to UI Design Tools</h2><p>UI design tools are applications used to design, prototype, test, present and communicate digital interfaces such as websites, mobile apps and dashboards.</p><ul><li><b>Design:</b> Create screens, layouts, typography, colours, icons and buttons.</li><li><b>Wireframing:</b> Plan structure before detailed visual design.</li><li><b>Mockup:</b> Show the static visual appearance of a proposed interface.</li><li><b>Prototyping:</b> Simulate screen navigation and interaction.</li><li><b>Collaboration:</b> Share work and gather feedback.</li><li><b>Handoff:</b> Provide measurements, styles, assets and behaviour specifications to developers.</li></ul></div>
+<div class="note-section"><h2>2. Figma</h2><p>Figma is a collaborative interface design and prototyping tool used for web and mobile UI design. It supports design files, components, prototypes, comments, sharing and developer inspection.</p><h3>Key features</h3><ul><li><b>Frames:</b> Containers representing screens, pages or sections.</li><li><b>Shapes and vector tools:</b> Create interface elements and illustrations.</li><li><b>Components:</b> Reusable elements such as buttons, cards and navigation bars.</li><li><b>Variants:</b> Different component versions or states, such as Default, Hover, Disabled and Active.</li><li><b>Auto Layout:</b> Arranges elements and helps maintain consistent spacing as content changes.</li><li><b>Prototype mode:</b> Connects screens and defines interactions.</li><li><b>Comments and collaboration:</b> Allows team review and discussion.</li><li><b>Dev Mode/inspection:</b> Helps developers inspect dimensions, styles and assets.</li></ul><h3>Basic workflow</h3><ol><li>Create a design file and choose the target frame.</li><li>Build layout using frames, grids and spacing.</li><li>Add text, images, icons and controls.</li><li>Create reusable components and use Auto Layout where suitable.</li><li>Connect screens in Prototype mode.</li><li>Preview and test the user flow.</li><li>Share the design and prepare handoff details.</li></ol></div>
+<div class="note-section"><h2>3. Adobe XD</h2><p>Adobe XD is a UI/UX design application intended for creating wireframes, visual designs, prototypes and design specifications. Availability and support can depend on the user's existing Adobe setup.</p><ul><li><b>Design mode:</b> Create and edit interface screens.</li><li><b>Prototype mode:</b> Connect artboards and define interactions.</li><li><b>Artboards:</b> Represent individual screens or pages.</li><li><b>Components:</b> Reusable interface elements.</li><li><b>Repeat Grid:</b> Repeats cards, lists and similar structures.</li><li><b>Assets:</b> Stores reusable colours, character styles and graphics.</li><li><b>Share/design specifications:</b> Communicates prototypes and design details.</li></ul><h3>Workflow</h3><ol><li>Create artboards for required screens.</li><li>Design the interface and reusable components.</li><li>Switch to Prototype mode and connect artboards.</li><li>Set triggers, actions and transitions.</li><li>Preview, test and share the prototype.</li></ol></div>
+<div class="note-section"><h2>4. Sketch</h2><p>Sketch is a UI design tool associated with designing interfaces for digital products. It offers layouts, reusable components, shared styles, libraries, prototyping and collaboration workflows.</p><ul><li><b>Artboards:</b> Define individual interface screens.</li><li><b>Symbols/components:</b> Reusable interface elements.</li><li><b>Shared styles:</b> Keep text, colours and layer styles consistent.</li><li><b>Libraries:</b> Store reusable components and design resources.</li><li><b>Prototyping:</b> Connect screens and create flows.</li><li><b>Handoff:</b> Share design details and assets with developers.</li></ul></div>
+<div class="note-section"><h2>5. Comparison: Figma, Adobe XD and Sketch</h2><table><tr><th>Aspect</th><th>Figma</th><th>Adobe XD</th><th>Sketch</th></tr><tr><td>Main use</td><td>UI/UX design and collaborative prototyping</td><td>UI/UX design and prototyping</td><td>UI design and reusable libraries</td></tr><tr><td>Screen design</td><td>Frames</td><td>Artboards</td><td>Artboards</td></tr><tr><td>Reusable UI</td><td>Components and variants</td><td>Components</td><td>Symbols/components</td></tr><tr><td>Prototyping</td><td>Prototype connections and interactions</td><td>Prototype mode</td><td>Prototype workflows</td></tr><tr><td>Handoff</td><td>Dev Mode/inspection and assets</td><td>Sharing/design specs</td><td>Export and developer workflows</td></tr><tr><td>Typical strength</td><td>Browser-based collaboration and shared workflows</td><td>Integration with Adobe workflows</td><td>Reusable libraries and UI design workflows</td></tr></table><p><b>Exam tip:</b> Explain how a feature helps the designer. For example, reusable components reduce repeated work and improve consistency.</p></div>
+<div class="note-section"><h2>6. Wireframe, Mockup and Prototype</h2><table><tr><th>Term</th><th>Meaning</th><th>Detail</th><th>Purpose</th></tr><tr><td>Wireframe</td><td>Structural representation of a screen</td><td>Low</td><td>Plan layout and information structure</td></tr><tr><td>Mockup</td><td>Static visual representation</td><td>Medium to high</td><td>Show appearance and visual style</td></tr><tr><td>Prototype</td><td>Interactive representation of product flow</td><td>Low to high</td><td>Test navigation and behaviour</td></tr></table><p>Wireframes answer “Where does everything go?” Mockups answer “How will it look?” Prototypes answer “How will it behave?”</p></div>
+<div class="note-section"><h2>7. High-Fidelity Prototypes</h2><p>A high-fidelity prototype closely resembles the final product in appearance and often in interaction. It can include realistic colours, typography, imagery, icons, spacing, buttons, navigation and interaction states.</p><h3>Characteristics</h3><ul><li>Uses realistic visual design instead of basic placeholders.</li><li>Uses final or near-final typography, colours and images.</li><li>Represents hover, active, selected and disabled states when relevant.</li><li>Can simulate navigation, forms, menus, overlays and transitions.</li><li>Supports realistic usability testing and stakeholder review.</li></ul><h3>Steps</h3><ol><li>Finalize information architecture and user flow.</li><li>Create detailed screens from wireframes.</li><li>Apply typography, colour, spacing and hierarchy.</li><li>Add images, icons and other assets.</li><li>Convert repeated elements into components.</li><li>Create states and variants.</li><li>Connect screens and add appropriate transitions.</li><li>Preview at the intended device size.</li><li>Test and refine using feedback.</li></ol></div>
+<div class="note-section"><h2>8. Mockups</h2><p>A mockup is a static, detailed visual representation of a proposed interface. A basic mockup does not necessarily contain working interactions.</p><h3>Elements of a good mockup</h3><ul><li>Clear layout and alignment.</li><li>Consistent colour scheme and readable typography.</li><li>Appropriate images and icons.</li><li>Consistent spacing and visible hierarchy.</li><li>Correct button and form styling.</li><li>Responsive considerations.</li></ul><p><b>Example:</b> A mobile banking mockup may show a login screen, account balance, transaction cards and navigation bar even though its buttons are not connected.</p></div>
+<div class="note-section"><h2>9. Interactive Prototyping</h2><p>Interactive prototyping connects static screens to simulate a product flow. It helps designers identify navigation problems before coding.</p><table><tr><th>Concept</th><th>Explanation</th></tr><tr><td>Trigger</td><td>Event that starts an interaction, such as click, tap, hover or key press.</td></tr><tr><td>Action</td><td>Response such as navigating to another screen or opening an overlay.</td></tr><tr><td>Destination</td><td>Screen or state displayed after the action.</td></tr><tr><td>Transition</td><td>Visual movement between screens or states.</td></tr><tr><td>Overlay</td><td>Temporary layer above the current screen, such as a dialog.</td></tr><tr><td>Component state</td><td>A version of a component, such as default, hover or disabled.</td></tr></table></div>
+<div class="note-section"><h2>10. Linking Screens: Step-by-Step</h2><ol><li>Identify the user flow, such as Login → Home → Product → Cart → Checkout.</li><li>Create or import the required screens.</li><li>Select the interactive element, such as the Login button.</li><li>Connect it to the destination screen.</li><li>Choose a trigger, such as On Click/Tap.</li><li>Choose an action, such as Navigate To or Open Overlay.</li><li>Select a suitable transition.</li><li>Preview the prototype.</li><li>Test forward and backward navigation and fix broken links.</li></ol><p><b>Example:</b> Login button → Home screen → Product card → Product details → Add to Cart → Cart screen.</p></div>
+<div class="note-section"><h2>11. Why Interactive Prototypes Are Important</h2><ul><li>Reveal navigation problems early.</li><li>Enable usability testing before development.</li><li>Help stakeholders understand the proposed product.</li><li>Reduce misunderstandings between designers, clients and developers.</li><li>Make presentations more realistic.</li><li>Allow comparison of alternative user flows.</li></ul></div>
+<div class="note-section"><h2>12. Design Handoff for Developers</h2><p>Design handoff transfers design information and resources from the design team to developers so that the implemented product matches the approved design.</p><h3>Information included in a good handoff</h3><ul><li><b>Screen designs:</b> Approved screens and states.</li><li><b>Dimensions:</b> Width, height, spacing, padding and margins.</li><li><b>Typography:</b> Font family, size, weight, line height and letter spacing.</li><li><b>Colours:</b> Primary, secondary, background, text, border and state colours.</li><li><b>Components:</b> Buttons, inputs, cards and navigation.</li><li><b>Assets:</b> Icons, logos, images and illustrations in suitable formats.</li><li><b>Interaction details:</b> Navigation, states, transitions and behaviours.</li><li><b>Responsive behaviour:</b> How the interface adapts to screen sizes.</li><li><b>Design rules:</b> Spacing, grid, naming and usage guidelines.</li></ul></div>
+<div class="note-section"><h2>13. Design Handoff Process</h2><ol><li>Finalize approved visual designs after review.</li><li>Organize pages, frames and components clearly.</li><li>Name layers and components meaningfully.</li><li>Check typography, colours, spacing and alignment.</li><li>Prepare assets for export.</li><li>Document interaction and responsive behaviour.</li><li>Share the design or prototype with developers.</li><li>Developers inspect measurements, styles and assets.</li><li>Compare the implementation with the approved design.</li><li>Resolve differences through design review and iteration.</li></ol></div>
+<div class="note-section"><h2>14. Design Systems</h2><p>A design system is a structured collection of reusable design principles, components, patterns, styles and guidelines used to create consistent digital products.</p><table><tr><th>Part</th><th>Examples</th></tr><tr><td>Design tokens</td><td>Colours, spacing, typography, border radius and shadows</td></tr><tr><td>Typography</td><td>Heading, body, caption and label styles</td></tr><tr><td>Colour system</td><td>Primary, secondary, surface, text, success, warning and error</td></tr><tr><td>Components</td><td>Buttons, inputs, cards, tabs, modals and navigation</td></tr><tr><td>Patterns</td><td>Login, search, checkout, filtering and form patterns</td></tr><tr><td>Guidelines</td><td>When and how a component should be used</td></tr><tr><td>Accessibility rules</td><td>Contrast, focus, readable text and keyboard use</td></tr></table><h3>Benefits</h3><ul><li>Improves consistency across screens and products.</li><li>Reduces repeated design work and speeds up development.</li><li>Makes updates easier to maintain.</li><li>Improves communication between designers and developers.</li><li>Supports product growth and accessibility.</li></ul></div>
+<div class="note-section"><h2>15. Assets in Design Handoff</h2><p>Assets are reusable visual resources used in interfaces, including logos, icons, illustrations and photographs.</p><ul><li><b>Format:</b> SVG is useful for scalable icons and logos; PNG, JPEG or WebP may suit raster images.</li><li><b>Resolution:</b> Export at suitable sizes for the target platform.</li><li><b>Naming:</b> Use meaningful names such as <code>logo-primary.svg</code> or <code>icon-search.svg</code>.</li><li><b>Variants:</b> Provide light/dark, active/inactive or size variations where needed.</li><li><b>Consistency:</b> Maintain a consistent icon style and dimensions.</li><li><b>Usage:</b> Explain where an asset should be used if its purpose is not obvious.</li></ul></div>
+<div class="note-section"><h2>16. Developer-Friendly File Organization</h2><ul><li>Use clear page names such as 01 Foundations, 02 Components, 03 Screens and 04 Prototype.</li><li>Use meaningful layer and component names.</li><li>Group related elements logically.</li><li>Avoid unnecessary duplicate components.</li><li>Keep old explorations separate from approved designs.</li><li>Clearly mark final screens and important interaction states.</li><li>Maintain one source of truth for shared styles and components.</li></ul></div>
+<div class="note-section"><h2>17. Accessibility in Handoff</h2><p>Accessibility means designing interfaces that can be used by people with different abilities and needs.</p><ul><li>Use sufficient contrast between text and background.</li><li>Do not communicate important information through colour alone.</li><li>Use readable font sizes and adequate spacing.</li><li>Provide visible keyboard focus states where relevant.</li><li>Use meaningful labels for buttons and form fields.</li><li>Consider touch target size on mobile devices.</li><li>Provide alternative text for meaningful images.</li></ul></div>
+<div class="note-section"><h2>18. Common Design-to-Development Problems</h2><table><tr><th>Problem</th><th>Effect</th><th>Prevention</th></tr><tr><td>Unclear layer names</td><td>Developers struggle to understand elements</td><td>Use meaningful naming</td></tr><tr><td>Missing assets</td><td>Development is delayed</td><td>Prepare and organize assets</td></tr><tr><td>Inconsistent components</td><td>Screens look different</td><td>Use a design system</td></tr><tr><td>Missing interaction specifications</td><td>Developers guess behaviour</td><td>Document triggers, states and transitions</td></tr><tr><td>Missing responsive rules</td><td>Poor appearance on other screens</td><td>Specify layout behaviour and breakpoints</td></tr><tr><td>Unapproved versions</td><td>Wrong design may be implemented</td><td>Clearly mark approved designs</td></tr></table></div>
+<div class="remember-box"><h2>19. Important Differences for Exams</h2><p><b>Mockup vs Prototype:</b> A mockup is mainly visual and static; a prototype focuses on interaction and flow. A mockup answers “How will it look?” while a prototype answers “How will it behave?”</p><p><b>Prototype vs Final Product:</b> A prototype simulates selected interactions; a final product is implemented and operational. A prototype may cover only the most important user flows.</p><p><b>Component vs Design System:</b> A component is a reusable UI element. A design system is a broader collection of principles, tokens, components, patterns and guidelines.</p></div>
+<div class="note-section"><h2>20. Short-Answer Revision: 2 Marks</h2><p><b>What is a UI design tool?</b> Software used to design, organize, prototype and communicate digital interfaces.</p><p><b>Define a mockup.</b> A detailed static visual representation of a proposed interface.</p><p><b>What is a high-fidelity prototype?</b> An interactive prototype that closely resembles the appearance and important behaviour of the final product.</p><p><b>What is a component?</b> A reusable UI element that can be used consistently across screens.</p><p><b>What is design handoff?</b> Providing finalized design specifications, assets and interaction information to developers.</p><p><b>What is a design system?</b> A reusable set of design rules, tokens, components, patterns and guidelines.</p><p><b>What is a trigger?</b> An event such as click, tap or hover that starts an interaction.</p><p><b>What is an asset?</b> A visual resource such as an icon, logo, image or illustration.</p></div>
+<div class="note-section"><h2>21. Important 5-Mark Questions</h2><ul><li>Explain the features and workflow of Figma.</li><li>Explain Adobe XD and its use in UI/UX design and prototyping.</li><li>Explain the important features of Sketch.</li><li>Differentiate wireframe, mockup and prototype with examples.</li><li>Explain the steps involved in creating a high-fidelity prototype.</li><li>Explain interactive prototyping and screen linking.</li><li>Explain the design handoff process.</li><li>Explain the purpose and benefits of a design system.</li><li>Explain reusable components and assets.</li><li>Compare Figma, Adobe XD and Sketch.</li></ul></div>
+<div class="note-section"><h2>22. Important 10-Mark Questions</h2><ul><li>Explain the complete process of creating a high-fidelity interactive prototype, from screen design to usability testing.</li><li>Compare Figma, Adobe XD and Sketch in terms of features, components, prototyping and handoff.</li><li>Explain design handoff, including specifications, design systems, assets, responsive behaviour and developer communication.</li><li>Explain how a design system improves consistency and development efficiency.</li><li>Design a simple mobile app user flow and explain how to link its screens in a prototyping tool.</li><li>Analyze common design-to-development problems and propose solutions.</li></ul></div>
+<div class="remember-box"><h2>23. Model 10-Mark Answer Structure: Design Handoff</h2><ol><li>Define design handoff.</li><li>Explain its need.</li><li>Finalize approved screens.</li><li>Organize pages, layers and components.</li><li>Provide typography and colour specifications.</li><li>Document dimensions, spacing and responsive behaviour.</li><li>Prepare and export assets.</li><li>Explain interactions, states and transitions.</li><li>Use design systems and reusable components.</li><li>Share specifications and conduct design review.</li><li>State benefits and give a login-to-home example.</li></ol></div>
+<div class="note-section"><h2>24. Last-Minute Revision Checklist</h2><ul><li>Know Figma, Adobe XD and Sketch.</li><li>Remember frames/artboards and reusable components.</li><li>Understand wireframe → mockup → prototype.</li><li>Know high-fidelity prototype characteristics.</li><li>Remember trigger → action → destination → transition.</li><li>Understand screen linking and design handoff.</li><li>Revise design systems, tokens and asset formats.</li><li>Remember accessibility and responsive behaviour.</li><li>For 10 marks, explain process, example and benefits.</li></ul></div>
+<div class="remember-box"><h2>25. One-Page Concept Map</h2><p><b>Research/requirements</b> → understand users and tasks → <b>Wireframe</b> → plan structure → <b>Mockup</b> → add visual appearance → <b>High-fidelity design</b> → apply realistic styles and components → <b>Prototype</b> → connect screens → <b>Testing</b> → check usability → <b>Design system</b> → maintain reusable rules → <b>Handoff</b> → provide specs and assets → <b>Implementation review</b> → compare the built interface with the approved design.</p><p><b>Exam-writing formula:</b> Definition → Purpose → Features/Steps → Example → Advantages/Comparison → Conclusion.</p></div>
+`
+},
+
+5:{
+title:"UNIT 5. UI/UX Usability Testing & Metrics",
+subtitle:"Complete Unit 5 Notes",
+topics:["Introduction to Usability Testing","Moderated, Unmoderated and Guerrilla Testing","Testing Tools and Frameworks","Qualitative and Quantitative Feedback","Affinity Diagrams","A/B Testing","Usability Metrics and Formulas","Good vs Bad UI/UX Case Studies","Revision Questions"],
+content:`
+<div class="note-section"><h2>1. Introduction to Usability Testing</h2><p>Usability testing is a method of evaluating a product by asking representative users to complete realistic tasks while researchers observe their behaviour. It helps identify where users become confused, make errors or struggle to complete goals.</p><h3>Purpose</h3><ul><li>Discover usability problems before or after launch.</li><li>Measure task success, time and errors.</li><li>Understand user expectations and difficulties.</li><li>Prioritize improvements using evidence.</li><li>Check whether design changes improve the experience.</li></ul></div>
+<div class="note-section"><h2>2. Moderated, Unmoderated and Guerrilla Testing</h2><table><tr><th>Method</th><th>Setup</th><th>Benefits</th><th>Limitations</th></tr><tr><td>Moderated</td><td>A facilitator guides a live in-person or remote session.</td><td>Can ask follow-up questions and investigate confusion.</td><td>Requires facilitator time and scheduling.</td></tr><tr><td>Unmoderated</td><td>Participants complete predefined tasks independently.</td><td>Scalable, fast and often less expensive.</td><td>Cannot immediately clarify misunderstandings.</td></tr><tr><td>Guerrilla</td><td>Quickly recruit available people in public places for short tests.</td><td>Rapid, low-cost feedback on basic concepts.</td><td>Convenience samples may not represent target users.</td></tr></table><p>The right method depends on project stage, budget, goals and target users.</p></div>
+<div class="note-section"><h2>3. Testing Tools and Specialized Frameworks</h2><table><tr><th>Category</th><th>Example tools</th><th>Primary use</th></tr><tr><td>Remote usability testing</td><td>UserTesting, Maze, Lookback</td><td>Record task completion, user comments and usability sessions.</td></tr><tr><td>Session recording and heatmaps</td><td>Hotjar, FullStory, Crazy Egg</td><td>Visualize clicks, scroll depth and potential friction.</td></tr><tr><td>Information architecture</td><td>Optimal Workshop tools such as Treejack and OptimalSort</td><td>Tree testing and card sorting to evaluate navigation and content structure.</td></tr><tr><td>Prototype testing</td><td>Figma prototyping, Proto.io</td><td>Test interactive flows before full development.</td></tr></table><p>Tool choice should follow the research question, privacy requirements and the type of evidence needed.</p></div>
+<div class="note-section"><h2>4. Qualitative and Quantitative Feedback</h2><table><tr><th>Type</th><th>What it includes</th><th>Analysis</th><th>Example</th></tr><tr><td>Qualitative</td><td>Comments, emotions, observed confusion and explanations.</td><td>Thematic analysis and affinity mapping.</td><td>Several users say they cannot find the checkout button.</td></tr><tr><td>Quantitative</td><td>Numerical measurements such as time, completion and error rate.</td><td>Statistical or mathematical comparison.</td><td>8 of 10 users complete checkout successfully.</td></tr></table><p>Combining both forms of evidence explains not only what happened, but also why it may have happened.</p></div>
+<div class="note-section"><h2>5. Affinity Diagram Framework</h2><p>An affinity diagram groups unstructured observations and user comments into clusters based on shared relationships. It helps teams identify recurring themes and prioritize problems.</p><h3>Steps</h3><ol><li>Collect notes from interviews, observations and tests.</li><li>Write one observation or idea per note.</li><li>Group notes with similar meanings.</li><li>Give each group a descriptive heading.</li><li>Identify repeated issues and important patterns.</li><li>Prioritize improvements by severity, frequency and user impact.</li></ol><p><b>Example:</b> Feedback such as “I cannot find search”, “The menu is confusing” and “Categories are hidden” may be grouped under “Navigation problems”.</p></div>
+<div class="note-section"><h2>6. A/B Testing (Split Testing)</h2><p>A/B testing is a controlled quantitative experiment in which users are randomly assigned to different versions of a design to determine which performs better on a defined metric.</p><ul><li><b>Control A:</b> The current or baseline version.</li><li><b>Variant B:</b> The changed design being tested.</li><li><b>Random assignment:</b> Helps make groups comparable.</li><li><b>Primary metric:</b> The outcome chosen before the test, such as sign-up conversion.</li><li><b>Decision:</b> Compare results while considering sample size, uncertainty and test duration.</li></ul><p><b>Example:</b> Version A has a blue “Sign Up” button; version B has a green button. The team compares sign-up conversion, keeping other factors as consistent as possible.</p><p><b>Important:</b> Do not choose a winner just because one version has a small numerical lead. Results should be interpreted with sufficient data and statistical uncertainty in mind.</p></div>
+<div class="note-section"><h2>7. Usability Metrics and Formulas</h2><table><tr><th>Metric</th><th>Meaning</th><th>Formula/Interpretation</th></tr><tr><td>Task Success Rate (TSR)</td><td>Percentage of attempts that complete a task correctly.</td><td>(Successful task attempts ÷ Total task attempts) × 100%</td></tr><tr><td>Time on Task (TOT)</td><td>Time taken to complete a task.</td><td>Average of task completion times for the defined sample.</td></tr><tr><td>Error Rate</td><td>Frequency of user errors.</td><td>Define the error unit first; e.g. total errors ÷ task attempts.</td></tr><tr><td>System Usability Scale (SUS)</td><td>Standard 10-item questionnaire using a 5-point response scale.</td><td>Overall SUS score ranges from 0 to 100; around 68 is often used as a benchmark average.</td></tr><tr><td>Conversion Rate</td><td>Share of users who complete a target action.</td><td>(Users who complete target action ÷ Eligible users) × 100%</td></tr><tr><td>Churn Rate</td><td>Share of users who stop using a service over a defined period.</td><td>Define the period and churn event before calculating.</td></tr></table><h3>Example: Task Success Rate</h3><p>If 8 out of 10 participants complete a task successfully:</p><p><b>TSR = (8 ÷ 10) × 100% = 80%</b></p></div>
+<div class="note-section"><h2>8. Real-World Case Studies: Good vs Bad UI/UX</h2><p>Case studies compare how design decisions affect user understanding, task completion and satisfaction. A good design makes important actions visible, uses consistent labels, provides clear feedback and prevents avoidable errors. A poor design may hide navigation, use unclear wording, overload the screen or provide confusing error messages.</p><table><tr><th>Evaluation area</th><th>Good UI/UX</th><th>Poor UI/UX</th><th>Possible improvement</th></tr><tr><td>Navigation</td><td>Clear categories and predictable menus</td><td>Hidden or inconsistent navigation</td><td>Use clear labels and test findability.</td></tr><tr><td>Forms</td><td>Helpful labels and specific error messages</td><td>Errors appear without guidance</td><td>Show errors beside fields and explain corrections.</td></tr><tr><td>Visual hierarchy</td><td>Primary action is easy to identify</td><td>Many elements compete for attention</td><td>Use spacing, contrast and consistent headings.</td></tr><tr><td>Accessibility</td><td>Readable contrast and keyboard support</td><td>Low contrast and unclear focus</td><td>Test contrast, labels and keyboard flow.</td></tr></table><p>When writing a case study, identify the user goal, observed problem, usability principle affected, evidence and proposed improvement.</p></div>
+<div class="note-section"><h2>9. Important 2-Mark Questions</h2><p><b>Define usability testing.</b> Evaluating a product by observing representative users complete tasks.</p><p><b>What is moderated testing?</b> A test guided in real time by a facilitator.</p><p><b>What is unmoderated testing?</b> A test completed independently without a live facilitator.</p><p><b>What is guerrilla testing?</b> A quick, low-cost test with conveniently recruited participants.</p><p><b>Define A/B testing.</b> A controlled experiment comparing two versions using a defined metric.</p><p><b>What is an affinity diagram?</b> A method for grouping related observations into themes.</p><p><b>What is Task Success Rate?</b> The percentage of task attempts completed successfully.</p><p><b>What is SUS?</b> The System Usability Scale, a standardized 10-item usability questionnaire.</p></div>
+<div class="note-section"><h2>10. Important 5-Mark Questions</h2><ul><li>Explain moderated, unmoderated and guerrilla testing.</li><li>Describe tools used for remote testing, heatmaps and information architecture.</li><li>Differentiate qualitative and quantitative feedback.</li><li>Explain the steps in affinity diagramming.</li><li>Explain A/B testing with an example.</li><li>Describe Task Success Rate, Time on Task and SUS.</li><li>Explain how usability testing improves UI/UX design.</li></ul></div>
+<div class="note-section"><h2>11. Important 10-Mark Questions</h2><ul><li>Explain the usability testing process from task planning and participant recruitment to analysis and iteration.</li><li>Discuss moderated, unmoderated and guerrilla testing, including benefits and limitations.</li><li>Explain qualitative and quantitative feedback analysis with an affinity diagram example.</li><li>Explain A/B testing, its steps, metrics and precautions.</li><li>Discuss usability metrics and demonstrate Task Success Rate with a calculation.</li><li>Analyze a good and a bad UI/UX design and propose evidence-based improvements.</li></ul></div>
+<div class="remember-box"><h2>12. Last-Minute Revision</h2><ul><li>Moderated = facilitator present; unmoderated = independent; guerrilla = quick convenience testing.</li><li>Qualitative explains experiences; quantitative measures outcomes.</li><li>Affinity diagrams group related feedback into themes.</li><li>A/B testing compares versions using a predefined metric.</li><li>TSR = successful attempts ÷ total attempts × 100%.</li><li>Time on Task measures completion time.</li><li>SUS is a 10-item questionnaire; 68 is a common benchmark average.</li><li>Use testing evidence to iterate and retest design improvements.</li></ul></div>
+`
+}
+
+};
+
+
+/* ================= NOTES FUNCTIONS ================= */
+
+let currentNotesUnit=1;
+
+function openNotes(unit){
+
+    currentNotesUnit=unit;
+
+    hideAll();
+
+    document.getElementById("notesUnitView").classList.add("active");
+
+    const data=notes[unit];
+
+    document.getElementById("notesTitle").textContent=data.title;
+
+    document.getElementById("notesSubtitle").textContent=data.subtitle;
+
+    document.getElementById("notesContent").innerHTML=data.content;
+
+    document.getElementById("notesSearch").value="";
+
+    createTopicLinks(data.topics);
+
+    window.scrollTo(0,0);
+}
+
+function createTopicLinks(topics){
+
+    const box=document.getElementById("topicLinks");
+
+    box.innerHTML="";
+
+    topics.forEach((topic,index)=>{
+
+        const button=document.createElement("button");
+
+        button.className="topic-link";
+
+        button.textContent=topic;
+
+        button.onclick=()=>{
+
+            const sections=document.querySelectorAll(
+                "#notesContent .note-section,#notesContent .remember-box"
+            );
+
+            if(sections[index]){
+
+                sections[index].scrollIntoView({
+                    behavior:"smooth",
+                    block:"start"
+                });
+
+            }
+
+        };
+
+        box.appendChild(button);
+
+    });
+
+}
+
+function filterNotes(){
+
+    const query=document
+        .getElementById("notesSearch")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const sections=document.querySelectorAll(
+        "#notesContent .note-section,#notesContent .remember-box"
+    );
+
+    sections.forEach(section=>{
+
+        const text=section.textContent.toLowerCase();
+
+        section.style.display=
+            text.includes(query) ? "" : "none";
+
+    });
+}
+
+
+/* ==========================================================
+   Q&A
+   ========================================================== */
+
+const questions={
+
+1:[
+
+{
+marks:2,
+number:1,
+question:"What is a UI component?",
+answer:`
+<p>Common parts of UI that users interact with.</p>
+<p>Ex: Buttons, Icons, Menus, Forms. Buttons do actions like Save, Submit.</p>
+`
+},
+
+{
+marks:2,
+number:2,
+question:"What is a button?",
+answer:`
+<p>Button is a UI component that does an action when clicked or tapped.</p>
+<p>It should have action words like Save, Continue.</p>
+<p>Ex: Pay button on payment screen.</p>
+`
+},
+
+{
+marks:2,
+number:3,
+question:"What is an icon?",
+answer:`
+<p>Icon is a small picture that shows meaning quickly.</p>
+<p>Use familiar symbols like magnifying glass for search.</p>
+<p>Ex: Trash can icon for delete.</p>
+`
+},
+
+{
+marks:2,
+number:4,
+question:"What is a form?",
+answer:`
+<p>Forms are boxes to enter information in UI.</p>
+<p>Good forms ask only necessary info and use correct input types.</p>
+<p>Ex: Date picker for dates.</p>
+`
+},
+
+{
+marks:5,
+number:1,
+question:"Characteristics of good UI design.",
+answer:`
+<p>Good UI must be clear, consistent and usable.</p>
+
+<ul>
+<li><strong>Labels should be clear:</strong> Users should know what each button does.</li>
+<li><strong>Keep size and spacing consistent:</strong> Same style everywhere.</li>
+<li><strong>Show feedback:</strong> Like a button changing color when clicked.</li>
+<li><strong>Show error messages clearly:</strong> Explain how to fix them.</li>
+<li><strong>Make controls easy for everyone to use:</strong> Accessible design.</li>
+<li><strong>Balanced Design:</strong> Spread things evenly, use whitespace, group related items, highlight important content more.</li>
+</ul>
+
+<p><strong>Example:</strong> Apple's design is well designed - clean workflow, fewer support tickets. Poor example: Healthcare.gov 2013 launch had poor UX.</p>
+`
+},
+
+{
+marks:5,
+number:2,
+question:"Principles of good form design.",
+answer:`
+<p>Forms are boxes to enter information. Good form design is critical for UX.</p>
+
+<ul>
+<li><strong>Ask only for necessary information:</strong> Don't ask extra fields.</li>
+<li><strong>Use clear labels and correct input types:</strong> Use date picker for dates, email keyboard for email.</li>
+<li><strong>Give instructions if needed:</strong> Placeholder or helper text.</li>
+<li><strong>Show errors clearly and explain how to fix them:</strong> Red text near field.</li>
+<li><strong>Keep entered data safe even after an error:</strong> Don't clear the whole form.</li>
+</ul>
+
+<p><strong>Example:</strong> Login form with Email and Password labels, show "Invalid password" in red without clearing email field.</p>
+`
+},
+
+{
+marks:10,
+number:1,
+question:"Explain the components of a good UI with suitable examples.",
+answer:`
+<p><strong>Definition:</strong> Common parts of UI are building blocks of interface.</p>
+
+<h4>A) Buttons:</h4>
+
+<p>Definition: Do actions like Save, Submit.</p>
+
+<p><strong>Good practices:</strong></p>
+
+<ul>
+<li>Use action words - Save, Continue, Pay Now.</li>
+<li>Make big enough to click or tap - min 44px for mobile.</li>
+<li>Show different states - hover, pressed, disabled.</li>
+<li>Highlight main button more than secondary - Primary filled, secondary outlined.</li>
+<li>Place where users expect - Save at bottom right.</li>
+</ul>
+
+<p><strong>Example:</strong> On form, "Submit" primary blue button, "Cancel" secondary grey.</p>
+
+<h4>B) Icons:</h4>
+
+<p>Definition: Small pictures that show meaning.</p>
+
+<p><strong>Good practices:</strong></p>
+
+<ul>
+<li>Use familiar symbols - magnifying glass = search, trash can = delete, house = home.</li>
+<li>Add text labels if icon is unclear.</li>
+<li>Keep style consistent - all outlined or all filled.</li>
+<li>Make sure screen readers can describe them - alt text.</li>
+<li>Don't use icons alone if meaning is confusing.</li>
+</ul>
+
+<p><strong>Example:</strong> In music app, play, pause, next icons.</p>
+
+<h4>C) Menus:</h4>
+
+<p>Definition: List of options for navigation.</p>
+
+<ul>
+<li>Organize options logically - alphabetical or by usage.</li>
+<li>Use short, clear labels - Home, Profile, Settings.</li>
+<li>Group related items - All account related together.</li>
+<li>Keep navigation consistent across pages.</li>
+<li>Show which option is selected - highlight.</li>
+</ul>
+
+<p><strong>Example:</strong> Sidebar menu of student portal - Dashboard, Attendance, Results.</p>
+
+<h4>D) Forms:</h4>
+
+<p>Definition: Boxes to enter information.</p>
+
+<ul>
+<li>Ask only necessary information.</li>
+<li>Use clear labels and correct input types - date picker for dates, number pad for phone.</li>
+<li>Give instructions if needed.</li>
+<li>Show errors clearly and explain how to fix - "Enter valid email".</li>
+<li>Keep entered data safe even after error.</li>
+</ul>
+
+<p><strong>Example:</strong> Login form, Registration form.</p>
+
+<h4>General Good UI Practices for all components:</h4>
+
+<ul>
+<li>Labels should be clear.</li>
+<li>Keep size and spacing consistent.</li>
+<li>Show feedback - button changing color when clicked.</li>
+<li>Show error messages clearly.</li>
+<li>Make controls easy for everyone - accessible.</li>
+</ul>
+
+<h4>Example combining all:</h4>
+
+<p>Food delivery app - Menu list of restaurants (Menus), Search icon, Filter buttons, Address entry form, Clear "Order Now" button. Easy restaurant search is UX, clear filters/buttons is UI. Both must balance.</p>
+`
+}
+
+],
+
+
+2:[
+
+{
+marks:2,
+number:1,
+question:"What is a UI layout?",
+answer:`
+<p>Layout is the arrangement and organization of visual elements on a screen. Good layout helps users scan content easily. Ex: Dashboard with navigation on left, content in middle.</p>
+`
+},
+
+{
+marks:2,
+number:2,
+question:"Define a grid system.",
+answer:`
+<p>A grid is like an invisible table of rows and columns that helps place items neatly. It makes design organized and consistent. Ex: 12-column grid - 8 columns for main content, 4 for sidebar.</p>
+`
+},
+
+{
+marks:2,
+number:3,
+question:"What is responsive design?",
+answer:`
+<p>The design changes shape to fit different devices like phone, tablet, computer. Text stays readable and no need to scroll sideways. Ex: Student portal stacking vertically on mobile.</p>
+`
+},
+
+{
+marks:2,
+number:4,
+question:"What is typography?",
+answer:`
+<p>Typography is about how text looks. Choosing right fonts makes reading easy and pleasant. Ex: Big bold text for headings, normal text for body.</p>
+`
+},
+
+{
+marks:2,
+number:5,
+question:"What is visual hierarchy?",
+answer:`
+<p>Visual hierarchy means what people notice first on a screen. It guides user attention to important things. Ex: On payment screen, Amount and Pay button should be most visible.</p>
+`
+},
+
+{
+marks:2,
+number:6,
+question:"What is mobile-first design?",
+answer:`
+<p>Start designing for small screens first, then grow for bigger screens. Show only most important content and make buttons big for fingers. Ex: Design mobile login screen first, then add features for desktop.</p>
+`
+},
+
+{
+marks:2,
+number:6,
+question:"What is a color scheme?",
+answer:`
+<p>Use a set of primary, secondary and accent colours consistently. Colors send messages and feelings. Ex: Green for Success, Red for Error, Yellow for Warning.</p>
+`
+},
+
+{
+marks:2,
+number:7,
+question:"What are gutters in a grid?",
+answer:`
+<p>Gutters are the space between columns in a grid system. Along with Columns, Margins and Containers they keep layout clean. They help in spacing and readability.</p>
+`
+},
+
+{
+marks:5,
+number:1,
+question:"Explain the importance of layout and grid system in UI grids.",
+answer:`
+<p><strong>Definition:</strong> Layout is the arrangement of visual elements on a screen. Grid is an invisible table of rows and columns that helps place items neatly.</p>
+
+<h4>Importance of Layout:</h4>
+
+<ul>
+<li><strong>Alignment:</strong> Keeps items lined up neatly.</li>
+<li><strong>Spacing:</strong> Leaves enough gaps so screen doesn't look messy.</li>
+<li><strong>Grouping:</strong> Puts related things together using Proximity principle.</li>
+<li><strong>Balance:</strong> Spreads content evenly so no side looks heavy.</li>
+<li><strong>Consistency:</strong> Uses same style everywhere.</li>
+</ul>
+
+<h4>Importance of Grid System:</h4>
+
+<ul>
+<li>Makes design organized and consistent.</li>
+<li>Parts of Grid:
+<ul>
+<li>Columns - Vertical Sections</li>
+<li>Gutters - Space between columns</li>
+<li>Margins - Space at the edges</li>
+<li>Containers - Boxes that hold content</li>
+</ul>
+</li>
+<li>Helps designs adjust to different screen sizes - desktop, tablet, mobile.</li>
+<li>Makes development faster with design systems.</li>
+</ul>
+
+<p><strong>Example:</strong> In a dashboard, navigation on the left, summary cards in the middle and actions on right. A 12-column grid example: 8 columns for main content, 4 columns for sidebars.</p>
+`
+},
+
+{
+marks:5,
+number:2,
+question:"Explain typography and its major components.",
+answer:`
+<p><strong>Definition:</strong> Typography is about how text looks. Good typography makes reading easy and pleasant.</p>
+
+<h4>Major Components / Rules:</h4>
+
+<ul>
+<li><strong>Hierarchy:</strong> Make a clear order - Big bold text for headings, Medium text for subheadings, Normal text for body content.</li>
+<li><strong>Font Choice:</strong> Choose fonts that match the product and audience.</li>
+<li><strong>Line Length:</strong> Keep line length easy to read, not too long.</li>
+<li><strong>Contrast:</strong> Use strong contrast like dark text on light background.</li>
+<li><strong>Consistency:</strong> Don't use too many different font sizes.</li>
+</ul>
+
+<p><strong>Example:</strong> In a student portal, Title "Attendance" in big bold, subject names in medium, details in normal text. Good contrast ensures readability for everyone.</p>
+`
+},
+
+{
+marks:5,
+number:3,
+question:"Color theory in UI design.",
+answer:`
+<p><strong>Definition:</strong> Colors send messages and feelings. They add meaning to the interface.</p>
+
+<h4>Principles:</h4>
+
+<ul>
+<li>Use a set of primary, secondary, and accent colours consistently throughout the app.</li>
+<li><strong>Warm colors (red, orange)</strong> feel energetic.</li>
+<li><strong>Cool colors (blue, green)</strong> feel calm.</li>
+<li>Use contrast so text stands out from background.</li>
+<li>Example: Green for Success, Red for Error, Yellow for Warning.</li>
+<li>Don't rely only on colors - add text or icons too for accessibility.</li>
+<li>Always check that colors are easy to read for everyone, including people with vision problems.</li>
+</ul>
+
+<h4>Types:</h4>
+
+<p>Primary colors for main branding, Secondary for support, Accent for highlights and actions.</p>
+`
+},
+
+{
+marks:5,
+number:4,
+question:"Visual hierarchy and its techniques.",
+answer:`
+<p><strong>Definition:</strong> Visual Hierarchy means what people notice first. It guides user attention to the most important things.</p>
+
+<h4>Ways to control attention / Techniques:</h4>
+
+<ul>
+<li><strong>Size:</strong> Bigger items catch the eye first.</li>
+<li><strong>Position:</strong> Top or center items are noticed first.</li>
+<li><strong>Contrast:</strong> Strong differences in color highlight important things.</li>
+<li><strong>Spacing:</strong> Empty spaces / whitespace makes items stand out.</li>
+<li><strong>Typography:</strong> Bold or styled text shows importance.</li>
+</ul>
+
+<p><strong>Example:</strong> On a payment screen, the Amount and Pay button should be the most visible using bigger size, high contrast color and center position, while secondary links are smaller.</p>
+`
+},
+
+{
+marks:5,
+number:5,
+question:"Explain mobile-first design.",
+answer:`
+<p><strong>Definition:</strong> Mobile-first means start designing for small screens first, then add more for bigger screens.</p>
+
+<h4>Principles:</h4>
+
+<ul>
+<li>Start designing for small screens first.</li>
+<li>Show only the most important content and actions.</li>
+<li>Use simple navigation like hamburger menu.</li>
+<li>Make buttons big enough for fingers to tap.</li>
+<li>Use layouts that can grow for bigger screens using flexible grids.</li>
+<li>Optimize images so they load fast on mobile.</li>
+<li>Add more features for tablets and desktops later.</li>
+</ul>
+
+<p><strong>Example:</strong> For Student Portal, on mobile show stacked vertical content with simple navigation and login button. On desktop, show multiple columns with detailed panels.</p>
+`
+},
+
+{
+marks:10,
+number:1,
+question:"Explain layout and grid systems in detail. Discuss how they help create balanced and responsive designs.",
+answer:`
+<h4>A) Layout in UI Design:</h4>
+
+<p>Layout is the arrangement and organization of visual elements on a screen. It is the foundation of UI. Good layout helps users scan content, understand relationships, and complete tasks efficiently.</p>
+
+<h4>Important Rules of Layout:</h4>
+
+<ol>
+<li><strong>Alignment:</strong> Keep items lined up neatly to create order.</li>
+<li><strong>Spacing:</strong> Leave enough gaps, so screen doesn't look messy or clumsy.</li>
+<li><strong>Grouping / Proximity:</strong> Put related things together. Keep related items close to each other.</li>
+<li><strong>Balance:</strong> Don't put everything on one side, spread it evenly so no one side looks heavy.</li>
+<li><strong>Consistency:</strong> Use the same style everywhere - same button style, same header.</li>
+<li><strong>Whitespace:</strong> Use empty space to make screen clean.</li>
+</ol>
+
+<h4>B) Grid Systems:</h4>
+
+<p>A grid is like an invisible table of rows and columns that helps place items neatly. It makes the design organized and consistent across pages.</p>
+
+<h4>Parts of Grid:</h4>
+
+<ol>
+<li><strong>Columns:</strong> Vertical Sections that hold content. Most common is 12-column grid.</li>
+<li><strong>Gutters:</strong> Space between columns. Provides breathing space.</li>
+<li><strong>Margins:</strong> Space at the edges of the screen.</li>
+<li><strong>Containers:</strong> Boxes that hold content inside the grid.</li>
+</ol>
+
+<h4>Types of Grids:</h4>
+
+<ol>
+<li><strong>Column Grid:</strong> Used for vertical division - most common in web.</li>
+<li><strong>Row Grid:</strong> Horizontal division for reading rhythm.</li>
+<li><strong>Modular Grid:</strong> Both columns and rows - like cards in dashboard.</li>
+<li><strong>Hierarchical Grid:</strong> Based on content importance, not fixed.</li>
+</ol>
+
+<h4>How they help create Balanced and Responsive Designs:</h4>
+
+<p><strong>For Balanced Design:</strong></p>
+
+<ul>
+<li>Spreads things evenly.</li>
+<li>Groups related items.</li>
+<li>Highlights important content more than less important.</li>
+<li>Example: Dashboard groups navigation on left, summary cards in middle and actions on right.</li>
+</ul>
+
+<p><strong>For Responsive Design:</strong></p>
+
+<ul>
+<li>Grids help designs adjust to different screen sizes - desktop, tablet, mobile.</li>
+<li>Flexible grids use % not fixed pixels.</li>
+<li>Example: 12-column grid -> On Desktop: 8 columns for main content, 4 columns for sidebar. On Tablet: 6+6. On Mobile: Stacked 12 columns vertical.</li>
+<li>No need to scroll sideways, text stays readable, buttons stay big enough to tap.</li>
+</ul>
+
+<p><strong>Conclusion:</strong> Layout and grids are backbone. Layout gives visual rules, grid gives invisible structure. Together they ensure clean, balanced and responsive UI.</p>
+`
+},
+
+{
+marks:10,
+number:2,
+question:"Explain typography, color theory, and visual hierarchy in UI design.",
+answer:`
+<p>This combines three pillars of visual design.</p>
+
+<h4>A) Typography - Definition:</h4>
+
+<p>Typography is about how text looks. It makes text readable and clear.</p>
+
+<h4>Components:</h4>
+
+<ul>
+<li><strong>Hierarchy:</strong> Big bold for headings, Medium for subheadings, Normal for body.</li>
+<li><strong>Font Choice:</strong> Match product and audience - professional font for banking, fun font for kids app.</li>
+<li><strong>Readability:</strong> Keep line length not too long, Use strong contrast - dark text on light background.</li>
+<li><strong>Consistency:</strong> Don't use too many different font sizes - max 2-3.</li>
+<li>Good typography makes reading easy and pleasant.</li>
+</ul>
+
+<h4>Types of Fonts:</h4>
+
+<p>Serif (formal), Sans-Serif (modern, clean - most used in UI), Monospace, Display.</p>
+
+<h4>B) Color Theory in UI Design:</h4>
+
+<p><strong>Definition:</strong> Colors send messages and feelings and add meaning.</p>
+
+<ul>
+<li>Use set of primary, secondary, accent colors consistently.</li>
+<li><strong>Psychology:</strong> Warm colors (red, orange) feel energetic and urgent. Cool colors (blue, green) feel calm and trustworthy - best for finance, healthcare.</li>
+<li><strong>Contrast:</strong> Use contrast so text stands out from background.</li>
+<li><strong>Semantic Colors:</strong> Green for Success, Red for Error, Yellow for Warning.</li>
+<li><strong>Accessibility:</strong> Don't rely only on colors, add text or icons too. Always check for people with vision problems.</li>
+</ul>
+
+<p><strong>Example:</strong> Payment Success in green tick, Error in red message with icon.</p>
+
+<h4>C) Visual Hierarchy:</h4>
+
+<p><strong>Definition:</strong> Means what people notice first. It guides attention.</p>
+
+<h4>Techniques to control attention:</h4>
+
+<ol>
+<li><strong>Size:</strong> Bigger items catch eye first.</li>
+<li><strong>Position:</strong> Top or center items noticed first - F-pattern reading.</li>
+<li><strong>Contrast:</strong> Strong color differences highlight important things.</li>
+<li><strong>Spacing / Whitespace:</strong> Empty spaces make items stand out.</li>
+<li><strong>Typography:</strong> Bold or styled text shows importance.</li>
+<li><strong>Color:</strong> Bright accent color draws attention.</li>
+</ol>
+
+<p><strong>Example:</strong> On a payment screen, the Amount in big bold 24px and Pay button in high contrast blue should be most visible, while "Terms & Conditions" in small grey link.</p>
+
+<p><strong>Relation:</strong> Typography + Color + Hierarchy together make UI scannable. Typography organizes text, color adds emotion and meaning, hierarchy tells where to look first.</p>
+`
+},
+
+{
+marks:10,
+number:3,
+question:"Explain mobile-first and responsive interface design in detail.",
+answer:`
+<h4>A) Mobile-First Design - Definition:</h4>
+
+<p>Start designing for small screens first, then progressively enhance for bigger screens.</p>
+
+<h4>Why Mobile-First?</h4>
+
+<p>Most users are on mobile, small screen forces focus on important content.</p>
+
+<h4>Principles of Mobile-First:</h4>
+
+<ol>
+<li>Start designing for small screens first - 320px width.</li>
+<li>Show only the most important content and actions - core tasks only.</li>
+<li>Use simple navigation - hamburger menu or bottom nav.</li>
+<li>Make buttons big enough for fingers - min 44x44 px.</li>
+<li>Use layouts that can grow for bigger screens - flexible grids.</li>
+<li>Optimize images so they load fast on mobile - compressed.</li>
+<li>Add more features for tablets and desktops later - progressive enhancement.</li>
+</ol>
+
+<p><strong>Example:</strong> Student portal mobile-first: Only Login, Timetable, Attendance shown vertically. Desktop later adds detailed panels, summary cards, charts.</p>
+
+<h4>B) Responsive Design & Responsive Interface:</h4>
+
+<p><strong>Responsive Design Definition:</strong> The design changes shape to fit different devices - phone, tablet, computer. Goal: Text stays readable, Button stays big enough to tap on phone, No need to scroll sideways.</p>
+
+<h4>Responsive Interface Principles:</h4>
+
+<ol>
+<li>Use flexible grids and spacing, not fixed widths - % or fr units, not px.</li>
+<li>Add breakpoints - rules for when layout changes. Common breakpoints: 768px tablet, 1024px desktop.</li>
+<li>Let content decide how layout adapts, not just device type.</li>
+<li>Keep navigation usable at all sizes - collapses to hamburger on mobile.</li>
+<li>Test text, images, forms and buttons on different devices.</li>
+<li>Check portrait and landscape modes.</li>
+<li>Always test with real devices, not just emulator.</li>
+</ol>
+
+<h4>Design Example - Responsive Student Portal:</h4>
+
+<ul>
+<li><strong>Desktop:</strong> Dashboard with multiple columns, navigation, summary cards, detailed panels. 12 columns - 3 for nav, 6 for main, 3 for info.</li>
+<li><strong>Tablet:</strong> Fewer columns, adjusted spacing. 2 columns - nav collapsed, main takes 8.</li>
+<li><strong>Mobile:</strong> Stacked vertical content, simplified simple navigation. Single column stacked.</li>
+<li>Keep visual hierarchy consistent across all devices - Pay button always prominent.</li>
+<li>Make main actions (login, view timetable) easy to tap.</li>
+<li>Ensure text and forms readable everywhere.</li>
+<li>Test common tasks like login, checking attendance, downloading results on all sizes.</li>
+</ul>
+
+<p><strong>Benefits:</strong> One design works everywhere, lower maintenance cost, better SEO, higher satisfaction.</p>
+`
+},
+
+{
+marks:10,
+number:4,
+question:"Explain how design principles contribute to creating an effective user interface.",
+answer:`
+<p>Effective UI = Useful + Usable + Accessible + Clear. This is achieved by applying all design principles from your notes.</p>
+
+<h4>1. Layout and Grid System Contribution:</h4>
+
+<p>Keeps content organized. Prevents messy UI. Example: 12-column grid ensures alignment and consistency, reduces developer time.</p>
+
+<h4>2. Balanced Design Contribution:</h4>
+
+<p>Spreads things evenly so no side looks heavy. Uses whitespace to make screen clean. Groups related items. Highlights important content. Creates professional and calm feeling.</p>
+
+<h4>3. Typography Contribution:</h4>
+
+<p>Makes text readable and clear. Establishes hierarchy so user knows what is heading vs body. Good line length and contrast reduces eye strain. Example: Dark text on light background.</p>
+
+<h4>4. Color Theory Contribution:</h4>
+
+<p>Adds meaning and emotion. Guides user - Green success, Red error. Creates brand identity. Maintains accessibility when contrast is checked.</p>
+
+<h4>5. Visual Hierarchy Contribution:</h4>
+
+<p>Guides attention to what matters first. Without hierarchy user is lost. Using size, position, contrast, spacing - designer controls user journey. Example: Pay button biggest.</p>
+
+<h4>6. Components Contribution (Buttons, Icons, Menus, Forms):</h4>
+
+<p>These are touchpoints. Clear labels, consistent size, feedback, error handling make interface usable and prevents frustration. Example: Showing which menu is selected helps orientation.</p>
+
+<h4>7. Mobile-First and Responsive Contribution:</h4>
+
+<p>Ensures usability across devices. Today users switch devices. Responsive ensures no sideways scroll, readable text, tappable buttons. Mobile-first ensures core content priority. Example: Student portal works on phone during travel and on desktop in lab.</p>
+
+<h4>Overall Flow:</h4>
+
+<p>UX defines what users need and how journey should flow. UI translates UX into visible interface. Balance of usefulness + usability + accessibility + clarity. When all principles applied, result is higher retention, fewer support tickets, faster development, lower costs, increased adoption.</p>
+
+<h4>Bad vs Good Example:</h4>
+
+<p>Well designed Apple - strong UX, higher retention. Poorly designed Healthcare.gov 2013 - weak UX, confusion, abandonment. Food delivery app needs both: Easy search (UX) + Clear filters/buttons (UI) = Effective UI.</p>
+`
+}
+
+],
+
+3:[
+{marks:2,number:1,question:"What is a wireframe?",answer:`<p>A wireframe is a simplified structural plan of a screen showing the placement of content and interface elements before detailed visual design.</p>`},
+{marks:2,number:2,question:"What is vector graphics?",answer:`<p>Vector graphics represent shapes using mathematical paths and coordinates, so they can be resized without pixelation.</p>`},
+{marks:2,number:3,question:"Define low-fidelity design.",answer:`<p>A low-fidelity design is a simple sketch or grayscale layout used for rapid brainstorming and early structure planning.</p>`},
+{marks:2,number:4,question:"What is a high-fidelity mockup?",answer:`<p>A high-fidelity mockup is a detailed static visual representation using realistic colours, typography, imagery and spacing.</p>`},
+{marks:2,number:5,question:"What is a prototype trigger?",answer:`<p>A trigger is an event such as click, tap or hover that starts an interaction.</p>`},
+{marks:5,number:6,question:"Differentiate low-fidelity, mid-fidelity and high-fidelity designs.",answer:`<p><b>Low fidelity:</b> sketches or simple grayscale boxes; used for rapid brainstorming.</p><p><b>Mid fidelity:</b> digital grayscale layouts with clearer spacing and possible basic links; used to validate layout and navigation.</p><p><b>High fidelity:</b> realistic colours, typography, imagery and interactions; used for stakeholder review and usability testing.</p>`},
+{marks:5,number:7,question:"Explain the benefits of wireframing.",answer:`<p>Wireframing plans structure and hierarchy, makes layout discussions easier, supports rapid changes, reveals missing content early and reduces effort spent polishing a layout that may later change.</p>`},
+{marks:5,number:8,question:"Explain the steps involved in screen linking.",answer:`<ol><li>Identify the user flow.</li><li>Create the required screens.</li><li>Select an interactive element.</li><li>Connect it to a destination screen.</li><li>Choose a trigger and action.</li><li>Set a transition and preview.</li><li>Test all forward and backward links.</li></ol>`},
+{marks:5,number:9,question:"What information should be included in design handoff?",answer:`<p>Handoff should include approved screens, dimensions, spacing, typography, colour values, reusable components, exported assets, interaction states, navigation details and responsive behaviour.</p>`},
+{marks:10,number:10,question:"Explain the complete design process from wireframing to developer handoff.",answer:`<p><b>1. Wireframing:</b> Plan screen structure, content placement and navigation using simple boxes and labels.</p><p><b>2. Fidelity development:</b> Refine the layout from low-fidelity to mid-fidelity, then apply realistic visual styling in a high-fidelity design.</p><p><b>3. Mockup creation:</b> Apply typography, colours, spacing, imagery and components consistently.</p><p><b>4. Prototyping:</b> Connect screens using triggers, actions and transitions to simulate important user flows.</p><p><b>5. Testing:</b> Preview the flow and identify confusing navigation or interaction issues.</p><p><b>6. Handoff:</b> Provide approved screens, dimensions, styles, assets, states and responsive rules.</p><p><b>7. Review:</b> Compare the developed interface with the approved design and resolve differences.</p><p><b>Conclusion:</b> This process improves clarity, reduces rework and supports consistent implementation.</p>`}
+],
+
+4:[
+{marks:2,number:1,question:"What is Figma?",answer:`<p>Figma is a collaborative UI design and prototyping tool used to create interface screens, reusable components and interactive flows.</p>`},
+{marks:2,number:2,question:"What are components in UI design?",answer:`<p>Components are reusable interface elements, such as buttons or cards, that help maintain consistency and reduce repeated work.</p>`},
+{marks:2,number:3,question:"Define design handoff.",answer:`<p>Design handoff is the transfer of approved designs, specifications, assets and interaction details from designers to developers.</p>`},
+{marks:2,number:4,question:"What is a design system?",answer:`<p>A design system is a collection of reusable design rules, tokens, components, patterns and guidelines for consistent digital products.</p>`},
+{marks:2,number:5,question:"Differentiate mockup and prototype.",answer:`<p>A mockup mainly shows how an interface looks and is usually static. A prototype simulates how it behaves through linked screens and interactions.</p>`},
+{marks:5,number:6,question:"Explain the important features of Figma.",answer:`<p>Figma provides frames for screens, vector tools, reusable components, variants for component states, Auto Layout for flexible arrangement, prototype connections, comments for collaboration and developer inspection for dimensions, styles and assets.</p>`},
+{marks:5,number:7,question:"Compare Figma, Adobe XD and Sketch.",answer:`<p>Figma is known for collaborative browser-based workflows, frames, components, variants and developer inspection. Adobe XD uses artboards, components, Repeat Grid and Prototype mode. Sketch uses artboards, symbols/components, shared styles, libraries and export/handoff workflows. All support interface design and prototyping, but their workflows and ecosystems differ.</p>`},
+{marks:5,number:8,question:"Explain the benefits of a design system.",answer:`<p>A design system improves visual consistency, reduces repeated work, speeds up design and development, makes changes easier to maintain, improves designer-developer communication, supports product growth and helps standardize accessibility patterns.</p>`},
+{marks:5,number:9,question:"List the information included in a good design handoff.",answer:`<p>It includes approved screens, component states, dimensions, spacing, typography, colour tokens, assets, interaction details, navigation, responsive behaviour and usage guidelines.</p>`},
+{marks:10,number:10,question:"Explain the design handoff process and its importance.",answer:`<p><b>Definition:</b> Design handoff transfers approved interface designs and specifications to developers.</p><p><b>Steps:</b> Finalize screens; organize pages and components; name layers clearly; verify spacing, typography and colours; prepare assets; document interaction states and transitions; specify responsive behaviour; share the source design; inspect the implementation and review differences.</p><p><b>Design systems:</b> Shared tokens, components and guidelines help keep the implementation consistent.</p><p><b>Accessibility:</b> Handoff should include contrast, readable text, labels, focus states and other relevant accessibility details.</p><p><b>Benefits:</b> It reduces ambiguity, prevents missing assets, speeds up development and reduces rework.</p><p><b>Example:</b> For a login screen, the developer receives the approved layout, font sizes, button dimensions, validation states and navigation destination.</p><p><b>Conclusion:</b> A clear handoff connects design intent with a consistent, usable implementation.</p>`}
+],
+
+5:[
+{marks:2,number:1,question:"What is usability testing?",answer:`<p>Usability testing evaluates a product by observing representative users complete realistic tasks to identify difficulties and improve the design.</p>`},
+{marks:2,number:2,question:"What is moderated testing?",answer:`<p>Moderated testing is a session guided in real time by a facilitator who can ask follow-up questions.</p>`},
+{marks:2,number:3,question:"Define A/B testing.",answer:`<p>A/B testing is a controlled experiment comparing two design versions using a predefined metric.</p>`},
+{marks:2,number:4,question:"What is an affinity diagram?",answer:`<p>An affinity diagram groups related observations and feedback into themes to reveal recurring problems and priorities.</p>`},
+{marks:2,number:5,question:"What is Task Success Rate?",answer:`<p>Task Success Rate is the percentage of task attempts completed successfully: (successful attempts ÷ total attempts) × 100%.</p>`},
+{marks:5,number:6,question:"Differentiate moderated, unmoderated and guerrilla testing.",answer:`<p><b>Moderated:</b> A facilitator guides a live session and can probe user difficulties, but it requires scheduling and time.</p><p><b>Unmoderated:</b> Participants complete tasks independently, allowing scale and speed, but immediate clarification is unavailable.</p><p><b>Guerrilla:</b> Quick, low-cost testing with convenient participants, useful for early concepts but potentially less representative.</p>`},
+{marks:5,number:7,question:"Differentiate qualitative and quantitative feedback.",answer:`<p>Qualitative feedback is non-numerical, including comments, emotions and observed confusion; it can be analyzed using themes and affinity mapping. Quantitative feedback is numerical, such as completion rates, errors and time on task; it helps measure and compare performance.</p>`},
+{marks:5,number:8,question:"Explain the steps in creating an affinity diagram.",answer:`<ol><li>Collect observations and user comments.</li><li>Write one idea per note.</li><li>Group similar observations.</li><li>Label each cluster with a theme.</li><li>Identify repeated patterns.</li><li>Prioritize improvements based on severity, frequency and impact.</li></ol>`},
+{marks:5,number:9,question:"Explain A/B testing with an example.",answer:`<p>A/B testing randomly assigns comparable users to a control version A and variant B. The team defines a primary metric, runs the test, gathers sufficient data and compares outcomes while considering uncertainty. For example, two sign-up button designs may be compared using sign-up conversion rate.</p>`},
+{marks:10,number:10,question:"Explain usability testing methods, metrics and how results improve UI/UX.",answer:`<p><b>1. Plan:</b> Define user goals, tasks, target participants and success criteria.</p><p><b>2. Select a method:</b> Moderated testing supports probing; unmoderated testing supports scale; guerrilla testing provides rapid early feedback.</p><p><b>3. Collect evidence:</b> Observe behaviour, comments, errors, task completion and time.</p><p><b>4. Analyze:</b> Qualitative feedback reveals why problems occur; quantitative measures show their frequency or impact. Affinity diagrams group related observations.</p><p><b>5. Measure:</b> Task Success Rate = successful attempts ÷ total attempts × 100%. Time on Task measures completion time. SUS is a standardized 10-item questionnaire, with around 68 often used as a benchmark average. Conversion rate measures target actions.</p><p><b>6. Experiment:</b> A/B testing compares two versions using a predefined metric and randomized assignment.</p><p><b>7. Improve and retest:</b> Prioritize serious recurring issues, update the interface, and test again to confirm the change helped.</p><p><b>Conclusion:</b> Usability testing combines observation and measurable evidence to make interfaces clearer, more efficient and more effective.</p>`}
+]
+
+};
+
+
+/* ================= Q&A FUNCTIONS ================= */
+
+let currentQAUnit=1;
+let currentTab="all";
+
+function openQA(unit){
+
+    currentQAUnit=unit;
+    currentTab="all";
+
+    hideAll();
+
+    document.getElementById("qaUnitView").classList.add("active");
+
+    const qaTitles={
+        1:"UNIT 1: Introduction to UI & UX",
+        2:"UNIT 2: Design Principles",
+        3:"UNIT 3: UI/UX Design Tools & Wireframing",
+        4:"UNIT 4: Design Tools, Prototyping & Design Handoff",
+        5:"UNIT 5: UI/UX Usability Testing & Metrics"
+    };
+    document.getElementById("qaTitle").textContent=qaTitles[unit]||("UNIT "+unit);
+
+    document.getElementById("qaSubtitle").textContent=
+        "Select a mark category and reveal answers when you are ready.";
+
+    document.getElementById("qaSearch").value="";
+
+    document.querySelectorAll(".tab").forEach((tab,index)=>{
+        tab.classList.toggle("active",index===0);
+    });
+
+    renderQuestions();
+
+    window.scrollTo(0,0);
+}
+
+function setTab(tab,button){
+
+    currentTab=tab;
+
+    document.querySelectorAll(".tab").forEach(x=>{
+        x.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    renderQuestions();
+}
+
+function renderQuestions(){
+
+    const container=document.getElementById("questionsContainer");
+
+    const search=document
+        .getElementById("qaSearch")
+        .value
+        .toLowerCase()
+        .trim();
+
+    let data=questions[currentQAUnit];
+
+    if(currentTab!=="all"){
+        data=data.filter(q=>String(q.marks)===currentTab);
+    }
+
+    if(search){
+        data=data.filter(q=>
+            q.question.toLowerCase().includes(search) ||
+            q.answer.toLowerCase().includes(search)
+        );
+    }
+
+    container.innerHTML="";
+
+    if(!data.length){
+
+        container.innerHTML=`
+        <div class="note-section">
+            <h2>No questions found</h2>
+            <p>Try another search term or mark category.</p>
+        </div>
+        `;
+
+        return;
+    }
+
+    data.forEach((q,index)=>{
+
+        const card=document.createElement("div");
+
+        card.className="question-card";
+
+        card.innerHTML=`
+
+        <div class="question-header">
+
+            <div class="mark-badge">
+                ${q.marks}-MARK
+            </div>
+
+            <h3>
+                ${q.number}. ${q.question}
+            </h3>
+
+        </div>
+
+        <div class="question-actions">
+
+            <button
+            class="answer-btn"
+            onclick="toggleAnswer(${index})">
+            VIEW ANSWER
+            </button>
+
+            <button
+            class="copy-btn"
+            onclick="copyAnswer(${index})">
+            COPY ANSWER
+            </button>
+
+        </div>
+
+        <div
+        class="answer"
+        id="answer-${index}">
+        ${q.answer}
+        </div>
+        `;
+
+        container.appendChild(card);
+
+    });
+}
+
+function toggleAnswer(index){
+
+    const answer=document.getElementById("answer-"+index);
+
+    const button=
+        answer.parentElement.querySelector(".answer-btn");
+
+    answer.classList.toggle("show");
+
+    button.textContent=
+        answer.classList.contains("show")
+        ?"HIDE ANSWER"
+        :"VIEW ANSWER";
+}
+
+function copyAnswer(index){
+
+    let data=questions[currentQAUnit];
+
+    if(currentTab!=="all"){
+        data=data.filter(q=>String(q.marks)===currentTab);
+    }
+
+    const search=document
+        .getElementById("qaSearch")
+        .value
+        .toLowerCase()
+        .trim();
+
+    if(search){
+        data=data.filter(q=>
+            q.question.toLowerCase().includes(search) ||
+            q.answer.toLowerCase().includes(search)
+        );
+    }
+
+    const question=data[index];
+
+    if(!question)return;
+
+    const temp=document.createElement("div");
+
+    temp.innerHTML=question.answer;
+
+    navigator.clipboard.writeText(temp.innerText.trim())
+    .then(()=>{
+        alert("Answer copied successfully.");
+    })
+    .catch(()=>{
+        alert("Unable to copy automatically.");
+    });
+}
+
+showHome();
+
+</script>
+
+</body>
+</html>
+
+
+
